@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     TextList *list = new TextList();
     
     cout << gauge->getX();
-    Mat image = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay/HeadsUpDisplay/HUD_Test_Image.jpg");
+    Mat image = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/HUD_Test_Image.jpg");
     Mat overlay(image.size().height, image.size().width, CV_8UC4);
     
     image.copyTo(overlay);
