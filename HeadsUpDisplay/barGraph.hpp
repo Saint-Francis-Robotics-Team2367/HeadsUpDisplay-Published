@@ -34,6 +34,7 @@ private:
     int _scaleSize;
     int _width;
     int _height;
+    cv::Mat img;
     
     void _drawGraph(int fill);
     
