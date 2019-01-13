@@ -7,41 +7,56 @@
 //
 
 #include "gauge.hpp"
-
-using namespace std;
-using namespace cv;
     
     double scaleValues;//not sure what this variable is for
 
-    Gauge::Gauge(int _x, int _y, int _lowerRange, int _upperRange, int _size, int _r, int _g, int _b, double _increment, int _startingValue, bool _showMin, bool _showMax){
-        this->_xPos = _x;
-        this->_yPos = _y;
-        this->_lowerRange = _lowerRange;
-        this->_upperRange = _upperRange;
-        this->_size = _size;
-        this->_r = _r;
-        this->_g = _g;
-        this->_b = _b;
-        this->_rTicker = _r;
-        this->_gTicker = _g;
-        this->_bTicker = _b;
-        this->_increment = _increment;
-        this->_currentValue = _startingValue;
+    Gauge::Gauge(){
+        this->_xPos = 0;
+        this->_yPos = 0;
+        this->_lowerRange = 0;
+        this->_upperRange = 100;
+        this->_size = 50;
+        this->_r = 0;
+        this->_g = 0;
+        this->_b = 0;
+        this->_rTicker = 0;
+        this->_gTicker = 0;
+        this->_bTicker = 0;
+        this->_increment = 1;
+        this->_currentValue = 0;
     }
-    Gauge::Gauge(int _x, int _y, int _lowerRange, int _upperRange, int _size, int _r, int _g, int _b){
-        this->_xPos = _x;
-        this->_yPos = _y;
-        this->_lowerRange = _lowerRange;
-        this->_upperRange = _upperRange;
-        this->_size = _size;
-        this->_r = _r;
-        this->_g = _g;
-        this->_b = _b;
-        this->_rTicker = _r;
-        this->_gTicker = _g;
-        this->_bTicker = _b;
+
+    Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, double increment, int startingValue, bool showMin, bool showMax){
+        this->_xPos = x;
+        this->_yPos = y;
+        this->_lowerRange = lowerRange;
+        this->_upperRange = upperRange;
+        this->_size = size;
+        this->_r = r;
+        this->_g = g;
+        this->_b = b;
+        this->_rTicker = r;
+        this->_gTicker = g;
+        this->_bTicker = b;
+        this->_increment = increment;
+        this->_currentValue = startingValue;
+        //need to instantiate the img that this gauge will be drawn on
+    }
+    Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b){
+        this->_xPos = x;
+        this->_yPos = y;
+        this->_lowerRange = lowerRange;
+        this->_upperRange = upperRange;
+        this->_size = size;
+        this->_r = r;
+        this->_g = g;
+        this->_b = b;
+        this->_rTicker = r;
+        this->_gTicker = g;
+        this->_bTicker = b;
         this->_increment = 1.0;
         this->_currentValue = 0;
+        //need to instantiate the img that this gauge will be drawn on
     }
     
     void Gauge::drawGauge(int value, Mat img){

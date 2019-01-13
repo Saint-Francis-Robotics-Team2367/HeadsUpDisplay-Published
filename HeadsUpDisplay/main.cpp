@@ -20,16 +20,22 @@ using namespace cv;
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    Gauge *gauge = new Gauge(5,5,5,5,50,255,0,0);
-    TextList *list = new TextList();
     
-    cout << gauge->getX();
+    
     Mat image = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/HUD_Test_Image.jpg");
     Mat overlay(image.size().height, image.size().width, CV_8UC4);
     
+    Gauge *gauge = new Gauge(5,5,5,5,50,255,0,0);
+    TextList *list = new TextList();
+    
     image.copyTo(overlay);
-    double alpha = 0.3;
-    list->drawList(5, 5, 5, overlay);
+    double alpha = 0;
+    list->addText("stuff");
+    list->editText(0, "BRUH");
+    Mat textImage = list->drawList();
+    //cout<<textImage<<endl;testing to see what exists inside the textImage Mat
+    //I tested using textImage in the below function and it throws a runtime error
+    //I think I am handling how to pass a Mat object incorrectly in my textList.cpp and here in main.cpp on line 37
     addWeighted(overlay, alpha, image, 1 - alpha, 0, image);//this function blends the two images together
     gauge->drawGauge(5,image);
     

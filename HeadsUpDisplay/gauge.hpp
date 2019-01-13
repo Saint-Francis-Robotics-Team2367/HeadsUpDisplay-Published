@@ -16,12 +16,16 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 
+using namespace std;
+using namespace cv;
+
 class Gauge
 {
     
 public:
-    Gauge(int _x, int _y, int _lowerRange, int _upperRange, int _size, int _r, int _g, int _b, double _increment, int _startingValue, bool _showMin = false, bool _showMax = false);//done
-    Gauge(int _x, int _y, int _lowerRange, int _upperRange, int _size, int _r, int _g, int _b);//done
+    Gauge();
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, double increment, int startingValue, bool showMin = false, bool showMax = false);//done
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b);//done
     void drawGauge(int value, cv::Mat img);//done
     int getX();//done
     int getY();

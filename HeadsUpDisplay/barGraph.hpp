@@ -16,11 +16,15 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 
+using namespace std;
+using namespace cv;
+
 class BarGraph
 {
     
 public:
     BarGraph();
+    BarGraph(int xPos, int yPos, int scaleValues, int height);
     void drawGraph();
     void updateGraph(int fill);
     //gotta add all the mat files in maybe an array since you will have a finite amount per bargraph
@@ -32,11 +36,12 @@ private:
     int _fill;
     double _scaleValues;
     int _scaleSize;
-    int _width;
     int _height;
     cv::Mat img;
     
-    void _drawGraph(int fill);
+    void _drawInnerRectangle(int fill);
+    void _drawOuterRectangle();
+    void _drawBaseLine();
     
 };
 
