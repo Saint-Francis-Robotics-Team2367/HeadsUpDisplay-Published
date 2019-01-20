@@ -54,7 +54,6 @@ private:
     
     void _drawText(Mat img);
     void _drawBorder();
-    void _testMethod();
 
     
 };

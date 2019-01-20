@@ -73,8 +73,9 @@ private:
     bool _showMax;
     
     
-    void _drawInitialGauge(int value, int r, int g, int b);
-    void _drawTicker(int value);
+    void _drawInitialGauge(int value, int r, int g, int b, Mat img);
+    void _drawTicker(int value, Mat img);
+    void _drawArc(Mat img);
     void _updateBackground(int r, int g, int b);//will use current value for redrawing ticker
     
 };

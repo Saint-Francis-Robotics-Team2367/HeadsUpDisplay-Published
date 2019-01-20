@@ -22,12 +22,6 @@ using namespace cv;
 using namespace std;
 */
 
-#include "opencv2/core.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/videoio.hpp"
-#include <sys/time.h>
-#include <time.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -42,6 +36,7 @@ int main(int argc, const char * argv[]) {
     HUD *hud = new HUD();
 
     hud->addTextList();
+    hud->addGauge(20, 200, 0, 100, Size(200,200), 50, 250, 100, 255);
     hud->drawAll();
     /*
     //text settings

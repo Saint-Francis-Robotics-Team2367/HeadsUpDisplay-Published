@@ -1,5 +1,8 @@
 dependencies: \
   /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/main.cpp \
+  /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/HUD.hpp \
+  /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/barGraph.hpp \
+  /usr/local/include/opencv2/imgproc.hpp \
   /usr/local/include/opencv2/core.hpp \
   /usr/local/include/opencv2/core/cvdef.h \
   /usr/local/include/opencv2/core/hal/interface.h \
@@ -28,7 +31,6 @@ dependencies: \
   /usr/local/include/opencv2/core/types_c.h \
   /usr/local/include/opencv2/core/optim.hpp \
   /usr/local/include/opencv2/core/ovx.hpp \
-  /usr/local/include/opencv2/imgproc.hpp \
   /usr/local/include/opencv2/imgproc/imgproc_c.h \
   /usr/local/include/opencv2/imgproc/types_c.h \
   /usr/local/include/opencv2/highgui.hpp \
@@ -37,7 +39,5 @@ dependencies: \
   /usr/local/include/opencv2/highgui/highgui_c.h \
   /usr/local/include/opencv2/imgcodecs/imgcodecs_c.h \
   /usr/local/include/opencv2/videoio/videoio_c.h \
-  /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/HUD.hpp \
-  /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/barGraph.hpp \
   /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/gauge.hpp \
   /Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/textList.hpp

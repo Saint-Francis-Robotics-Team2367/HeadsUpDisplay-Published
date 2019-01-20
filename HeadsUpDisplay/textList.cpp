@@ -37,9 +37,8 @@
     }
 
     Mat TextList::drawList(Mat img){
-//        this->_img = img;
         _drawText(img);
-        //_drawBorder(img);
+        //_drawBorder(img);WIP
         return this->_img;
     }
 
@@ -77,18 +76,6 @@
     }
 
     void TextList::_drawText(Mat img){
-        /*
-        string testString;
-        int baseLine = 0;
-        //putText puts stuff on the image
-        for(int i=0;i<list.size();i++){
-            testString = this->list.at(i);
-            cout<<getTextSize(testString, FONT_HERSHEY_COMPLEX, 1, this->_thickness/4, &baseLine)<<endl;
-            //putText(this->_img, testString, Point(600,50+(i*20)), FONT_HERSHEY_COMPLEX, this->_thickness/4, Scalar(0,0,255));//putText puts stuff on the image
-            putText(img, testString, Point(getX()+20,getY()+30), FONT_HERSHEY_COMPLEX, this->_thickness/4, Scalar(this->_r,this->_g,this->_b));//putText puts stuff on the image
-        }
-        */
-        
         int tBoxPosX = 20,
         tBoxPosY = 20,
         tBoxBorderThickness = 1,
@@ -122,7 +109,6 @@
         
         //draw text onto alpha layer
         putText(textAlpha, this->_text, Point(0,textAlpha.size().height-tBoxBaseline), tBoxFont, tBoxFontScale, Scalar(255), tBoxBorderThickness);
-        putText(textAlpha, this->_text, Point(0, textAlpha.size().height+20-tBoxBaseline), tBoxFont, tBoxFontScale, Scalar(255),tBoxBorderThickness);
         
         //check that the text is in frame so the bitwise ops don't crash
         if(tBoxPosX + textAlpha.size().width > img.size().width || tBoxPosY + textAlpha.size().height > img.size().height)
@@ -148,101 +134,4 @@
 
     int TextList::getStringLength(){
         return this->_text.length();
-    }
-
-    void TextList::_testMethod(){
-    
-        string text = "Test String";
-        
-        int tBoxPosX = 20,
-        tBoxPosY = 20,
-        tBoxBorderThickness = 1,
-        tBoxFont = FONT_HERSHEY_COMPLEX_SMALL,
-        tBoxBaseline = 0;
-         
-        double tBoxFontScale =1;
-         
-        Scalar textColor(255,50,55);
-         
-        //calc dependant varsmak
-        Size tBoxBorderSize;
-         
-        //opencv data vars
-        //VideoCapture capture; //camera feed
-        Mat          //output Image
-        textForground,    //text color layer
-        textAlpha,        //text draw layer
-        image_roi;        //roi of output image
-        
-        Mat currImg;//output Image
-        currImg = this->_img;
-        
-        //timing variables to check performace
-        clock_t startTime=clock(), currTime=clock();
-        
-        struct timeval currFrameTime,lastFrameTime;
-        gettimeofday(&currFrameTime, NULL);
-        
-        
-        //capture.open(0);
-        
-        if(true)//capture.isOpened()
-        {
-        //cout << "Capture is opened" << endl;
-        while(waitKey(10) != 'q')
-        {
-            gettimeofday(&currFrameTime, NULL);
-            //calculate timing data
-            long int ms =(currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);
-            text =   "Proc time: "+ to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0/ ms));
-            lastFrameTime = currFrameTime;
-            
-            //log the cpu clock to see how long the alloc and draw takes
-            startTime = clock();
-            
-            //grab image from camera
-            //capture >> currImg;
-            currImg = this->_img;
-            
-            if(currImg.empty()) break;
-            
-            //calc size of image needed to draw text
-            tBoxBorderSize = getTextSize(text,tBoxFont,tBoxFontScale, tBoxBorderThickness, &tBoxBaseline);
-            
-            //release memory
-            textForground.release();
-            textAlpha.release();
-            
-            //allocate images based on text settings
-            textForground = Mat(tBoxBorderSize.height +tBoxBaseline, tBoxBorderSize.width,CV_8UC3,textColor);
-            textAlpha = Mat(tBoxBorderSize.height+tBoxBaseline, tBoxBorderSize.width,CV_8UC1,Scalar(0));
-            
-            //draw text onto alpha layer
-            putText(textAlpha, text, Point(0,textAlpha.size().height-tBoxBaseline), tBoxFont, tBoxFontScale, Scalar(255), tBoxBorderThickness);
-            putText(textAlpha, this->_text, Point(0, textAlpha.size().height+10-tBoxBaseline), tBoxFont, tBoxFontScale, Scalar(255),tBoxBorderThickness);
-            
-            //check that the text is in frame so the bitwise ops don't crash
-            if(tBoxPosX + textAlpha.size().width > currImg.size().width || tBoxPosY + textAlpha.size().height > currImg.size().height)
-            {
-                cout << "[WARNING] Text goes out of frame" <<endl;
-            }
-            
-            else
-            {
-                image_roi = currImg(Rect(tBoxPosX, tBoxPosY, textAlpha.size().width, textAlpha.size().height));
-                bitwise_and(image_roi, Scalar(0), image_roi, textAlpha);
-                bitwise_or(image_roi, textForground, image_roi,textAlpha);
-            }
-            
-            //log the cpu clock after alloc and draw
-            currTime = clock();
-            
-            //show images
-            imshow("Sample", currImg);
-            imshow("alpha", textAlpha);
-            
-            cout << text << endl;
-            
-            }
-        }
     }

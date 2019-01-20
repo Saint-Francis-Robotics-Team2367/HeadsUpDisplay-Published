@@ -24,7 +24,7 @@
         this->_bTicker = 0;
         this->_increment = 1;
         this->_currentValue = 0;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0,0));//is there a better way to implement creating a Mat like this into the line below?
+        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         this->_img = img;
     }
 
@@ -45,7 +45,7 @@
         this->_currentValue = startingValue;
         this->_showMin = showMin;
         this->_showMax = showMax;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0,0));//is there a better way to implement creating a Mat like this into the line below?
+        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         this->_img = img;
     }
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha){
@@ -65,41 +65,69 @@
         this->_currentValue = 0;
         this->_showMin = false;
         this->_showMax = false;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0,0));//is there a better way to implement creating a Mat like this into the line below?
+        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         this->_img = img;
     }
     
     Mat Gauge::drawGauge(int value, Mat img){
-        //cout<<this->_img.size().width<<endl;
-        this->_width = img.size().width;
-        this->_height = img.size().height;
-        int thickness = 10;
-        int shift = 0;
-        int lineType = LINE_8;
-        int angleIncrement = 0;
-        int startAngle = 0;
-        int endAngle = 90;
-        vector<Mat> channel;
-        split(img, channel);
-        //cout<<getImageWidth()<<endl;//why does this print out 0800 instead of 800?
-        //cout<<getImageHeight()<<endl;
-        
-        //ellipse(this->_img, Point((getImageWidth()/3)-20,(getImageHeight()/3)+70), Size(getSizeGauge(),getSizeGauge()), angleIncrement, startAngle, endAngle, getBackgroundColor(), thickness, lineType, shift);//Scalar(b,g,r)
-        ellipse(img, Point((getImageWidth()/3)-20,(getImageHeight()/3)+70), getGaugeSize(), angleIncrement, startAngle, endAngle, getBackgroundColor(), thickness, lineType, shift);//Scalar(b,g,r)
-        ellipse(channel[3], Point((getImageWidth()/3)-20,(getImageHeight()/3)+70), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255,255,255,255), thickness, lineType, shift);//Scalar(b,g,r)
-        //ellipse(img, Point((getImageWidth()/3)-40,(getImageHeight()/3)+70), Size(50,50), angleIncrement+77, startAngle, endAngle, Scalar(b,g,r), thickness, lineType, shift);
-        imshow("test1", channel[3]);
-        _drawTicker(value);
+        _drawArc(img);
+        _drawTicker(value, img);
         
         return this->_img;
     }
     
-    void Gauge::_drawInitialGauge(int value, int r, int g, int b){
-        //what was the purpose of this again
+    void Gauge::_drawInitialGauge(int value, int r, int g, int b, Mat img){
+        //I need to have a flag in this class that can tell if the draw function has been drawn before or not
     }
     
-    void Gauge::_drawTicker(int value){
+    void Gauge::_drawTicker(int value, Mat img){
         //need a drawLine function here
+    }
+
+    void Gauge::_drawArc(Mat img){
+        
+        this->_width = img.size().width;
+        this->_height = img.size().height;
+        int thickness = 4;
+        int shift = 0;
+        int lineType = LINE_8;
+        int angleIncrement = 180;
+        int startAngle = 0;
+        int endAngle = 90;
+        
+        //opencv data vars
+        //VideoCapture capture; //camera feed
+        
+        Mat
+        textForground,    //text color layer
+        textAlpha,        //text draw layer
+        image_roi;        //roi of output image
+        
+        //release memory
+        textForground.release();
+        textAlpha.release();
+        
+        //allocate images based on text settings
+        textForground = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC3, getBackgroundColor());
+        textAlpha = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC1, Scalar(0));
+        
+        //draw ellipses onto alpha layer
+        ellipse(textAlpha, Point(0,textAlpha.size().height/2), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
+        //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
+        
+        //check that the text is in frame so the bitwise operations don't crash
+        if(getX() + textAlpha.size().width > img.size().width || getY() + textAlpha.size().height > img.size().height)
+        {
+            cout <<"[WARNING] Gauge goes out of frame"<<endl;
+        }
+        
+        else
+        {
+            image_roi = img(Rect(getX(), getY(), textAlpha.size().width, textAlpha.size().height));
+            bitwise_and(image_roi, Scalar(0), image_roi, textAlpha);
+            bitwise_or(image_roi, textForground, image_roi,textAlpha);
+        }
+        
     }
 
     void Gauge::_updateBackground(int r, int g, int b){
@@ -157,11 +185,11 @@
 
     void Gauge::setGaugeValue(int value){
         this->_currentValue = value;
-        _drawTicker(this->_currentValue);
+        _drawTicker(this->_currentValue, this->_img);
     }
 
     Scalar Gauge::getBackgroundColor(){
-        return Scalar(this->_r,this->_g,this->_b, this->_alpha);
+        return Scalar(this->_r,this->_g,this->_b);
     }
 
     void Gauge::setBackgroundColor(int r, int g, int b, Mat img){
@@ -179,7 +207,7 @@
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
-        _drawTicker(0);
+        _drawTicker(0, this->_img);
     }
 
     int Gauge::getImageWidth(){

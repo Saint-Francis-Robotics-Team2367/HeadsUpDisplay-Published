@@ -214,14 +214,13 @@
         gettimeofday(&currFrameTime, NULL);
         
         Mat img;
-        img = imread("/Users/jeevanprakash/Desktop/Funny/IMG_0620.PNG");
-        this->addTextList();
-        //this->_capture.open(0);
+        img = imread("/Users/jeevanprakash/Desktop/Screenshots/Screen Shot 2019-01-18 at 8.14.38 PM.jpg");
+        //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
-                long int ms =(currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);
-                text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));
+                long int ms =(currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);//NEED TO FIX: The ms value is stuck at 0 for some reason
+                text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));//FPS value is messed up since ms is stuck at 0
                 lastFrameTime = currFrameTime;
                 this->_lists[0].editText(text);
                 
@@ -230,9 +229,10 @@
                 //log the cpu clock to see how long the alloc and draw takes
                 startTime = clock();
                 //this->_capture >> img;
-                img = imread("/Users/jeevanprakash/Desktop/Funny/IMG_0620.PNG");
+                img = imread("/Users/jeevanprakash/Desktop/Screenshots/Screen Shot 2019-01-18 at 8.14.38 PM.jpg");
                 if(img.empty()) break;
-                //drawGauges(img); WIP
+                
+                drawGauges(img);
                 //drawBarGraphs(img); WIP
                 drawTextLists(img);
                 
