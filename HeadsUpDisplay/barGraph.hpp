@@ -24,20 +24,25 @@ class BarGraph
     
 public:
     BarGraph();
-    BarGraph(int xPos, int yPos, int scaleValues, int height);
-    void drawGraph();
+    BarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha);
+    Mat drawBarGraph();
     void updateGraph(int fill);
     //gotta add all the mat files in maybe an array since you will have a finite amount per bargraph
     //add setters and getters
     
 private:
-    int _xPos;
-    int _yPos;
+    int _x;
+    int _y;
     int _fill;
+    int _r;
+    int _g;
+    int _b;
+    int _alpha;
     double _scaleValues;
     int _scaleSize;
     int _height;
-    cv::Mat img;
+    int _thickness;
+    Mat _img;
     
     void _drawInnerRectangle(int fill);
     void _drawOuterRectangle();

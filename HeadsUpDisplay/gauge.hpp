@@ -24,9 +24,9 @@ class Gauge
     
 public:
     Gauge();
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, double increment, int startingValue, bool showMin = false, bool showMax = false);//done
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b);//done
-    void drawGauge(int value, cv::Mat img);//done
+    Gauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);//done
+    Gauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha);//done
+    Mat drawGauge(int value, Mat img);//done
     int getX();//done
     int getY();
     void setX(int x);
@@ -35,18 +35,18 @@ public:
     void setIncrement(double increment);
     int getGaugeValue();
     void setGaugeValue(int value);//done
-    cv::Scalar getBackgroundColor();
-    void setBackgroundColor(int r, int g, int b, cv::Mat img);
-    cv::Scalar getTickerColor();
+    Scalar getBackgroundColor();
+    void setBackgroundColor(int r, int g, int b, Mat img);
+    Scalar getTickerColor();
     void setTickerColor(int r, int g, int b);
     int getImageWidth();//in pixels
     int getImageHeight();//in pixels
     int getLowerRange();
-    void setLowerRange(int lowerRange, cv::Mat img);
+    void setLowerRange(int lowerRange, Mat img);
     int getUpperRange();
-    void setUpperRange(int upperRange, cv::Mat img);
-    int getSizeGauge();
-    void setSizeGauge(int size, cv::Mat img);
+    void setUpperRange(int upperRange, Mat img);
+    Size getGaugeSize();
+    void setGaugeSize(Size size, Mat img);
     
     
 private:
@@ -54,7 +54,7 @@ private:
     int _yPos;
     int _lowerRange;
     int _upperRange;
-    int _size;
+    Size _size;
     double _increment;
     int _width;
     int _height;
@@ -63,9 +63,15 @@ private:
     int _r;
     int _g;
     int _b;
+    int _alpha;
     int _rTicker;
     int _gTicker;
     int _bTicker;
+    int _thickness;
+    Mat _img;
+    bool _showMin;
+    bool _showMax;
+    
     
     void _drawInitialGauge(int value, int r, int g, int b);
     void _drawTicker(int value);
