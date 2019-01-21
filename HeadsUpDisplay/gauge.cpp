@@ -91,7 +91,7 @@
         int thickness = 4;
         int shift = 0;
         int lineType = LINE_8;
-        int angleIncrement = 180;
+        int angleIncrement = 0;
         int startAngle = 0;
         int endAngle = 90;
         
@@ -99,33 +99,33 @@
         //VideoCapture capture; //camera feed
         
         Mat
-        textForground,    //text color layer
-        textAlpha,        //text draw layer
+        gaugeForground,    //text color layer
+        gaugeAlpha,        //text draw layer
         image_roi;        //roi of output image
         
         //release memory
-        textForground.release();
-        textAlpha.release();
+        gaugeForground.release();
+        gaugeAlpha.release();
         
         //allocate images based on text settings
-        textForground = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC3, getBackgroundColor());
-        textAlpha = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC1, Scalar(0));
+        gaugeForground = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeAlpha = Mat(getGaugeSize().height+200, getGaugeSize().width+200, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
         
         //draw ellipses onto alpha layer
-        ellipse(textAlpha, Point(0,textAlpha.size().height/2), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
+        ellipse(gaugeAlpha, Point(0,gaugeAlpha.size().height/2), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
         //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
         
-        //check that the text is in frame so the bitwise operations don't crash
-        if(getX() + textAlpha.size().width > img.size().width || getY() + textAlpha.size().height > img.size().height)
-        {
+        //check that the ellipse is in frame so the bitwise operations don't crash
+        if(getX() + gaugeAlpha.size().width > img.size().width || getY() + gaugeAlpha.size().height > img.size().height)
+        {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
             cout <<"[WARNING] Gauge goes out of frame"<<endl;
         }
         
         else
         {
-            image_roi = img(Rect(getX(), getY(), textAlpha.size().width, textAlpha.size().height));
-            bitwise_and(image_roi, Scalar(0), image_roi, textAlpha);
-            bitwise_or(image_roi, textForground, image_roi,textAlpha);
+            image_roi = img(Rect(getX(), getY(), gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
+            bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
         }
         
     }
