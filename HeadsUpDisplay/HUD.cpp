@@ -12,7 +12,7 @@
         
     }
 
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, double increment, int startingValue, int index){
+    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, int index){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
         try{
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
@@ -20,11 +20,11 @@
             cout << exception.what() << endl;
         }
     }
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
+    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha, increment, startingValue, showMin, showMax);
         this->_gauges.push_back(gauge);
     }
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, int index){
+    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
         try{
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
@@ -32,7 +32,7 @@
             cout << exception.what() << endl;
         }
     }
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha){
+    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
         this->_gauges.push_back(gauge);
     }

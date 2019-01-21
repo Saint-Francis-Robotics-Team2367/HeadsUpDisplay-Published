@@ -27,10 +27,10 @@ class HUD{
     
 public:
     HUD();
-    void addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, double increment, int startingValue, int index);
-     void addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);
-    void addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha, int index);
-    void addGauge(int x, int y, int lowerRange, int upperRange, Size size, int r, int g, int b, int alpha);
+    void addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, int index);
+     void addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);
+    void addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index);
+    void addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);
     void addGauge(int index);
     void addGauge();
     void addTextList(int x, int y, int scaleTextSize,  int r, int g, int b, int alpha, int index);
