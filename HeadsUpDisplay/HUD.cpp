@@ -194,7 +194,7 @@
     }
 
     void HUD::drawGauges(Mat img){
-        for(int i=0; i<this->_gauges.size(); i++) this->_gauges[i].drawGauge(0, img);
+        for(int i=0; i<this->_gauges.size(); i++) this->_gauges[i].drawGauge(1, img);
     }
 
     void HUD::drawBarGraphs(Mat img){

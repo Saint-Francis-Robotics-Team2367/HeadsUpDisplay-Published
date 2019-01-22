@@ -14,7 +14,7 @@
         this->_xPos = 0;
         this->_yPos = 0;
         this->_lowerRange = 0;
-        this->_upperRange = 100;
+        this->_upperRange = 10;
         this->_size = 50;
         this->_r = 0;
         this->_g = 0;
@@ -81,7 +81,68 @@
     }
     
     void Gauge::_drawTicker(int value, Mat img){
-        //need a drawLine function here
+        int thickness = 4;
+        int lineType = LINE_8;
+        int shift = 0;
+        
+        Mat
+        gaugeForground,    //text color layer
+        gaugeAlpha,        //text draw layer
+        image_roi;        //roi of output image
+        
+        //release memory
+        gaugeForground.release();
+        gaugeAlpha.release();
+        
+        
+         int x1, y1;
+        int degrees = value * 36;
+        int size = getGaugeSize();
+         //need some sort of logic to figure out what quadrant the things are
+         //I have to make sure that negative angles are not inputted
+         //I have to make sure that the end angle and angleIncrement does not go over 360 (I could just substract 360 from them)
+         //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
+         
+         if(0<=degrees && degrees<=90){
+             x1 = getX() + abs(cos(degrees)*size);
+             y1 = getY() - abs(sin(degrees)*size);
+         } else if(90<degrees && degrees<=180){
+             x1 = getX() - abs(cos(180-degrees)*size);
+             y1 = getY() - abs(sin(180-degrees)*size);
+         } else if(180<degrees && degrees<=270){
+             x1 = getX() - abs(cos(degrees-180)*size);
+             y1 = getY() + abs(sin(degrees-180)*size);
+         } else {
+             x1 = getX() + abs(cos(360-degrees)*size);
+             y1 = getY() + abs(sin(360-degrees)*size);
+         }
+        
+        //allocate images based on text settings
+        gaugeForground = Mat(abs(getX()-x1), abs(getY()-y1), CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeAlpha = Mat(abs(getX()-x1), abs(getY()-y1), CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        
+        //draw line onto alpha layer
+        line(img, Point(gaugeAlpha.size().width, gaugeAlpha.size().height), Point(x1,y1), getBackgroundColor(), thickness, lineType, shift);
+        
+        //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
+        
+        
+        
+        //check that the ellipse is in frame so the bitwise operations don't crash
+        if(getX()-gaugeAlpha.size().width < 0 || getY()-gaugeAlpha.size().height < 0 || getX() > img.size().width || getY() > img.size().height)
+        {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            cout <<"[WARNING] Gauge goes out of frame"<<endl;
+        }
+        
+        else
+        {
+            image_roi = img(Rect(getX()-gaugeAlpha.size().width, getY()-gaugeAlpha.size().height, gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
+            bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
+        }
+        
+        imshow("Alpha: Ticker", gaugeAlpha);
+        
     }
 
     void Gauge::_drawArc(Mat img){
@@ -111,7 +172,7 @@
          int x1, x2, x3, y1, y2, y3;
         x1 = getX();
         //need some sort of logic to figure out what quadrant the things are
-        //I have to make sure that negative angles are not inputted
+        //I have to make sure that negative angles are not inputted (I could just add 360 to the inputted angle)
         //I have to make sure that the end angle and angleIncrement does not go over 360 (I could just substract 360 from them)
         //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
         
@@ -162,6 +223,8 @@
             bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
             bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
         }
+        
+        imshow("Alpha: Gauge", gaugeAlpha);
         
     }
 
