@@ -95,48 +95,76 @@
         gaugeAlpha.release();
         
         
-         int x1, y1;
+        int x1, y1;//center point of gauge
         int degrees = value * 36;
         int size = getGaugeSize();
-         //need some sort of logic to figure out what quadrant the things are
-         //I have to make sure that negative angles are not inputted
-         //I have to make sure that the end angle and angleIncrement does not go over 360 (I could just substract 360 from them)
-         //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
-         
-         if(0<=degrees && degrees<=90){
-             x1 = getX() + abs(cos(degrees)*size);
-             y1 = getY() - abs(sin(degrees)*size);
-         } else if(90<degrees && degrees<=180){
-             x1 = getX() - abs(cos(180-degrees)*size);
-             y1 = getY() - abs(sin(180-degrees)*size);
-         } else if(180<degrees && degrees<=270){
-             x1 = getX() - abs(cos(degrees-180)*size);
-             y1 = getY() + abs(sin(degrees-180)*size);
-         } else {
-             x1 = getX() + abs(cos(360-degrees)*size);
-             y1 = getY() + abs(sin(360-degrees)*size);
-         }
+        int x2, y2;//point that touches the gauge
+        int imageX, imageY;//top-left corner point of image_roi
+        int tickerWidth, tickerHeight;
+        //need some sort of logic to figure out what quadrant the things are
+        //I have to make sure that negative angles are not inputted
+        //I have to make sure that the end angle and angleIncrement does not go over 360 (I could just substract 360 from them)
+        //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
+        
+        if(0<=degrees && degrees<=90){
+            imageX = getX();
+            imageY = getY() - abs(sin(degrees)*size);
+            tickerWidth = abs(cos(degrees)*size);
+            tickerHeight = abs(sin(degrees)*size);
+            x1 = 0;
+            y1 = tickerHeight;
+            x2 = x1 + tickerWidth;
+            y2 = y1 - tickerHeight;
+        } else if(90<degrees && degrees<=180){
+            imageX = getX() - abs(cos(180-degrees)*size);
+            imageY = getY() - abs(sin(180-degrees)*size);
+            tickerWidth = abs(cos(180-degrees)*size);
+            tickerHeight = abs(sin(180-degrees)*size);
+            x1 = tickerWidth;
+            y1 = tickerHeight;
+            x2 = 0;
+            y2 = 0;
+        } else if(180<degrees && degrees<=270){
+            imageX = getX() - abs(cos(degrees-180)*size);
+            imageY = getY();
+            tickerWidth = abs(cos(degrees-180)*size);
+            tickerHeight = abs(sin(degrees-180)*size);
+            x1 = tickerWidth;
+            y1 = 0;
+            x2 = 0;
+            y2 = tickerHeight;
+        } else {
+            imageX = getX();
+            imageY = getY();
+            tickerWidth = abs(cos(360-degrees)*size);
+            tickerHeight = abs(sin(360-degrees)*size);
+            x1 = 0;
+            y1 = 0;
+            x2 = x1 + tickerWidth;
+            y2 = y1 + tickerHeight;
+        }
         
         //allocate images based on text settings
-        gaugeForground = Mat(abs(getX()-x1), abs(getY()-y1), CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        gaugeAlpha = Mat(abs(getX()-x1), abs(getY()-y1), CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeForground = Mat(tickerWidth*2, tickerHeight*2, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeAlpha = Mat(tickerWidth*2, tickerHeight*2, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
         
         //draw line onto alpha layer
-        line(img, Point(gaugeAlpha.size().width, gaugeAlpha.size().height), Point(x1,y1), getBackgroundColor(), thickness, lineType, shift);
+        line(gaugeAlpha, Point(x1, y1), Point(x2,y2), getBackgroundColor(), thickness, lineType, shift);//I need to fix the starting point :facepalm:
+        //it all depends on what quadrant it is so yeet
         
         //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
         
         
         
         //check that the ellipse is in frame so the bitwise operations don't crash
-        if(getX()-gaugeAlpha.size().width < 0 || getY()-gaugeAlpha.size().height < 0 || getX() > img.size().width || getY() > img.size().height)
+        if(imageX < 0 || imageY < 0 || imageX + tickerWidth > img.size().width || imageY + tickerHeight > img.size().height)
         {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
             cout <<"[WARNING] Gauge goes out of frame"<<endl;
         }
         
         else
         {
-            image_roi = img(Rect(getX()-gaugeAlpha.size().width, getY()-gaugeAlpha.size().height, gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            image_roi = img(Rect(imageX, imageY, gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
             bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
             bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
         }

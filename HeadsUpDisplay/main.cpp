@@ -36,7 +36,7 @@ int main(int argc, const char * argv[]) {
     HUD *hud = new HUD();
 
     hud->addTextList();
-    hud->addGauge(100, 100, 0, 100, 100, 50, 250, 100, 255);//int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index)
+    hud->addGauge(300, 200, 0, 100, 100, 50, 250, 100, 255);//int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index)
     //There needs to be a minimum size of 5 or something for the gauge because things start to get hairy once you go below that
     hud->drawAll();
     /*
