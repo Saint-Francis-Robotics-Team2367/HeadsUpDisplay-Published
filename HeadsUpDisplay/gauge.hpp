@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <math.h>
 
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"

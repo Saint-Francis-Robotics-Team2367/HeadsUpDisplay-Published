@@ -96,7 +96,9 @@
         
         
         int x1, y1;//center point of gauge
-        int degrees = value * 36;
+        int degrees = value * 36;//might need to add the angleincrement to this so it might need to be a private member variable
+        //int degrees  = 10;
+        double radians = degrees * (M_PI/180);
         int size = getGaugeSize();
         int x2, y2;//point that touches the gauge
         int imageX, imageY;//top-left corner point of image_roi
@@ -108,40 +110,90 @@
         
         if(0<=degrees && degrees<=90){
             imageX = getX();
-            imageY = getY() - abs(sin(degrees)*size);
-            tickerWidth = abs(cos(degrees)*size);
-            tickerHeight = abs(sin(degrees)*size);
-            x1 = 0;
-            y1 = tickerHeight;
-            x2 = x1 + tickerWidth;
-            y2 = y1 - tickerHeight;
+            imageY = getY() - round((sin(radians))*size);
+            radians = degrees * (M_PI/180);
+            if(degrees == 0){
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size) + 5;
+                x1 = 0;
+                y1 = 2;
+                x2 = tickerWidth;
+                y2 = 2;
+            } else if(degrees == 90) {
+                tickerWidth = round((cos(radians))*size) + 5;
+                tickerHeight = round((sin(radians))*size);
+                x1 = 2;
+                y1 = tickerHeight;
+                x2 = 2;
+                y2 = 0;
+            } else {
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size);
+                x1 = 0;
+                y1 = tickerHeight;
+                x2 = tickerWidth;
+                y2 = 0;
+            }
         } else if(90<degrees && degrees<=180){
-            imageX = getX() - abs(cos(180-degrees)*size);
-            imageY = getY() - abs(sin(180-degrees)*size);
-            tickerWidth = abs(cos(180-degrees)*size);
-            tickerHeight = abs(sin(180-degrees)*size);
-            x1 = tickerWidth;
-            y1 = tickerHeight;
-            x2 = 0;
-            y2 = 0;
+            degrees = 180 - degrees;
+            radians = degrees * (M_PI/180);
+            imageX = getX() - round((cos(radians))*size);
+            imageY = getY() - round((sin(radians))*size);
+            if(degrees == 0){
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size) + 5;
+                x1 = tickerWidth;
+                y1 = 2;
+                x2 = 0;
+                y2 = 2;
+            } else {
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size);
+                x1 = tickerWidth;
+                y1 = tickerHeight;
+                x2 = 0;
+                y2 = 0;
+            }
         } else if(180<degrees && degrees<=270){
-            imageX = getX() - abs(cos(degrees-180)*size);
+            degrees = degrees - 180;
+            radians = degrees * (M_PI/180);
+            imageX = getX() - round((cos(radians))*size);
             imageY = getY();
-            tickerWidth = abs(cos(degrees-180)*size);
-            tickerHeight = abs(sin(degrees-180)*size);
-            x1 = tickerWidth;
-            y1 = 0;
-            x2 = 0;
-            y2 = tickerHeight;
+            if(degrees == 90){
+                tickerWidth = round((cos(radians))*size) + 5;
+                tickerHeight = round((sin(radians))*size);
+                x1 = 2;
+                y1 = 0;
+                x2 = 2;
+                y2 = tickerHeight;
+            } else {
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size);
+                x1 = tickerWidth;
+                y1 = 0;
+                x2 = 0;
+                y2 = tickerHeight;
+            }
         } else {
+            degrees = 360 - degrees;
+            radians = degrees * (M_PI/180);
             imageX = getX();
             imageY = getY();
-            tickerWidth = abs(cos(360-degrees)*size);
-            tickerHeight = abs(sin(360-degrees)*size);
-            x1 = 0;
-            y1 = 0;
-            x2 = x1 + tickerWidth;
-            y2 = y1 + tickerHeight;
+            if(degrees == 0){
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size) + 5;
+                x1 = 0;
+                y1 = 2;
+                x2 = tickerWidth;
+                y2 = 2;
+            } else {
+                tickerWidth = round((cos(radians))*size);
+                tickerHeight = round((sin(radians))*size);
+                x1 = 0;
+                y1 = 0;
+                x2 = tickerWidth;
+                y2 = tickerHeight;
+            }
         }
         
         //allocate images based on text settings
