@@ -98,6 +98,7 @@
         int x1, y1;//center point of gauge
         int degrees = value * 36;//might need to add the angleincrement to this so it might need to be a private member variable
         //int degrees  = 10;
+        if(degrees>360) degrees -= 360;
         double radians = degrees * (M_PI/180);
         int size = getGaugeSize();
         int x2, y2;//point that touches the gauge
@@ -197,8 +198,8 @@
         }
         
         //allocate images based on text settings
-        gaugeForground = Mat(tickerWidth*2, tickerHeight*2, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        gaugeAlpha = Mat(tickerWidth*2, tickerHeight*2, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeForground = Mat(tickerHeight, tickerWidth, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        gaugeAlpha = Mat(tickerHeight, tickerWidth, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
         
         //draw line onto alpha layer
         line(gaugeAlpha, Point(x1, y1), Point(x2,y2), getBackgroundColor(), thickness, lineType, shift);//I need to fix the starting point :facepalm:
