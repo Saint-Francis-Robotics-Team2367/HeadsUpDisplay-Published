@@ -212,7 +212,7 @@
         //check that the ellipse is in frame so the bitwise operations don't crash
         if(imageX < 0 || imageY < 0 || imageX + tickerWidth > img.size().width || imageY + tickerHeight > img.size().height)
         {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-            cout <<"[WARNING] Gauge goes out of frame"<<endl;
+            cout <<"[WARNING] Ticker goes out of frame"<<endl;
         }
         
         else
