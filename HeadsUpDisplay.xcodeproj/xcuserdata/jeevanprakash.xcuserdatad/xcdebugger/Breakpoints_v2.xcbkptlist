@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HeadsUpDisplay/gauge.cpp"
-            timestampString = "570065985.314447"
+            timestampString = "570067578.695497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "98"
             endingLineNumber = "98"
-            landmarkName = "Gauge::_drawTicker(int value, Mat img)"
+            landmarkName = "Gauge::_drawTicker(Mat img)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

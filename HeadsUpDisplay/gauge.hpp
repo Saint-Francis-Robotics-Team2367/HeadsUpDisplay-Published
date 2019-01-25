@@ -27,7 +27,7 @@ public:
     Gauge();
     Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);//done
     Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);//done
-    Mat drawGauge(int value, Mat img);//done
+    Mat drawGauge(Mat img);//done
     int getX();//done
     int getY();
     void setX(int x);
@@ -59,7 +59,6 @@ private:
     double _increment;
     int _width;
     int _height;
-    int _value;
     int _currentValue;
     int _r;
     int _g;
@@ -75,7 +74,7 @@ private:
     
     
     void _drawInitialGauge(int value, int r, int g, int b, Mat img);
-    void _drawTicker(int value, Mat img);
+    void _drawTicker(Mat img);
     void _drawArc(Mat img);
     void _updateBackground(int r, int g, int b);//will use current value for redrawing ticker
     void _gaugeLogic(int x1, int x2, int x3, int y1, int y2, int y3);

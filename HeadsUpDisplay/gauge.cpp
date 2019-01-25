@@ -69,9 +69,9 @@
         this->_img = img;
     }
     
-    Mat Gauge::drawGauge(int value, Mat img){
+    Mat Gauge::drawGauge(Mat img){
         _drawArc(img);
-        _drawTicker(value, img);
+        _drawTicker(img);
         
         return this->_img;
     }
@@ -80,7 +80,7 @@
         //I need to have a flag in this class that can tell if the draw function has been drawn before or not
     }
     
-    void Gauge::_drawTicker(int value, Mat img){
+    void Gauge::_drawTicker(Mat img){
         int thickness = 4;
         int lineType = LINE_8;
         int shift = 0;
@@ -96,9 +96,9 @@
         
         
         int x1, y1;//center point of gauge
-        int degrees = value * 36;//might need to add the angleincrement to this so it might need to be a private member variable
-        //int degrees  = 10;
-        if(degrees>360) degrees -= 360;
+        setGaugeValue(getGaugeValue()+1);
+        if(getGaugeValue()>360)setGaugeValue(getGaugeValue()-360);//ensures that the degrees inputted into sin and cos functions does not exceed 360
+        int degrees = getGaugeValue();//might need to add the angleincrement to this so it might need to be a private member variable
         double radians = degrees * (M_PI/180);
         int size = getGaugeSize();
         int x2, y2;//point that touches the gauge
@@ -412,7 +412,7 @@
 
     void Gauge::setLowerRange(int lowerRange, Mat img){
         this->_lowerRange = lowerRange;
-        drawGauge(getGaugeValue(), img);
+        drawGauge(img);
     }
 
     int Gauge::getUpperRange(){
@@ -421,7 +421,7 @@
 
     void Gauge::setUpperRange(int upperRange, Mat img){
         this->_upperRange = upperRange;
-        drawGauge(getGaugeValue(), img);
+        drawGauge(img);
     }
 
     int Gauge::getIncrement(){
@@ -438,7 +438,7 @@
 
     void Gauge::setGaugeValue(int value){
         this->_currentValue = value;
-        _drawTicker(this->_currentValue, this->_img);
+        //_drawTicker(this->_currentValue, this->_img);
     }
 
     Scalar Gauge::getBackgroundColor(){
@@ -449,7 +449,7 @@
         this->_r = r;
         this->_g = g;
         this->_b = b;
-        drawGauge(getGaugeValue(), img);
+        drawGauge(img);
     }
 
     Scalar Gauge::getTickerColor(){
@@ -460,7 +460,7 @@
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
-        _drawTicker(0, this->_img);
+        _drawTicker(this->_img);
     }
 
     int Gauge::getImageWidth(){
@@ -477,5 +477,5 @@
 
     void Gauge::setGaugeSize(int size, Mat img){
         this->_size = size;
-        drawGauge(getGaugeValue(), img);
+        drawGauge(img);
     }
