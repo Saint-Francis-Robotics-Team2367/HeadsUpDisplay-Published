@@ -24,8 +24,9 @@
         this->_bTicker = 0;
         this->_increment = 1;
         this->_currentValue = 0;
+        this->_thickness = 4;
         Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
-        this->_img = img;
+        _drawInitialGauge();
     }
 
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){//I shouldn't take in a Size() parameter, instead I should take in an integer since the width and height needs to be the same
@@ -45,8 +46,9 @@
         this->_currentValue = startingValue;
         this->_showMin = showMin;
         this->_showMax = showMax;
+        this->_thickness = 4;
         Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
-        this->_img = img;
+        _drawInitialGauge();
     }
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
         this->_xPos = x;
@@ -65,26 +67,25 @@
         this->_currentValue = 0;
         this->_showMin = false;
         this->_showMax = false;
+        this->_thickness = 4;
         Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
-        this->_img = img;
+        _drawInitialGauge();
     }
     
-    Mat Gauge::drawGauge(Mat img){
+    void Gauge::drawGauge(Mat img){
         _drawArc(img);
         _drawTicker(img);
-        
-        return this->_img;
     }
     
-    void Gauge::_drawInitialGauge(int value, int r, int g, int b, Mat img){
-        //I need to have a flag in this class that can tell if the draw function has been drawn before or not
+    void Gauge::_drawInitialGauge(){
+        _updateGauge();
+        _drawLocalArc();
+        _updateTicker();
+        _drawLocalTicker();
     }
     
     void Gauge::_drawTicker(Mat img){
-        int thickness = 4;
-        int lineType = LINE_8;
-        int shift = 0;
-        
+        /*
         Mat
         gaugeForground,    //text color layer
         gaugeAlpha,        //text draw layer
@@ -96,7 +97,7 @@
         
         
         int x1, y1;//center point of gauge
-        setGaugeValue(getGaugeValue()+1);
+        setGaugeValue(getGaugeValue()+10);
         if(getGaugeValue()>360)setGaugeValue(getGaugeValue()-360);//ensures that the degrees inputted into sin and cos functions does not exceed 360
         int degrees = getGaugeValue();//might need to add the angleincrement to this so it might need to be a private member variable
         double radians = degrees * (M_PI/180);
@@ -200,9 +201,10 @@
         //allocate images based on text settings
         gaugeForground = Mat(tickerHeight, tickerWidth, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
         gaugeAlpha = Mat(tickerHeight, tickerWidth, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        */
         
+        Mat image_roi; //roi of output image
         //draw line onto alpha layer
-        line(gaugeAlpha, Point(x1, y1), Point(x2,y2), getBackgroundColor(), thickness, lineType, shift);//I need to fix the starting point :facepalm:
         //it all depends on what quadrant it is so yeet
         
         //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
@@ -210,46 +212,28 @@
         
         
         //check that the ellipse is in frame so the bitwise operations don't crash
-        if(imageX < 0 || imageY < 0 || imageX + tickerWidth > img.size().width || imageY + tickerHeight > img.size().height)
+        if(this->_tickerAlphaX < 0 || this->_tickerAlphaY < 0 || this->_tickerAlphaX + this->_tickerWidth > img.size().width || this->_tickerAlphaY + this->_tickerHeight > img.size().height)
         {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
             cout <<"[WARNING] Ticker goes out of frame"<<endl;
         }
         
         else
         {
-            image_roi = img(Rect(imageX, imageY, gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-            bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
-            bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
+            image_roi = img(Rect(this->_tickerAlphaX, this->_tickerAlphaY, this->_tickerAlpha.size().width, this->_tickerAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            bitwise_and(image_roi, Scalar(0), image_roi, this->_tickerAlpha);
+            bitwise_or(image_roi, this->_tickerForeground, image_roi, this->_tickerAlpha);
         }
-        
-        imshow("Alpha: Ticker", gaugeAlpha);
         
     }
 
     void Gauge::_drawArc(Mat img){
         
-        this->_width = img.size().width;
-        this->_height = img.size().height;
-        int thickness = 4;
-        int shift = 0;
-        int lineType = LINE_8;
-        int angleIncrement = 0;
-        int startAngle = 0;
-        int endAngle = 360;
-        
         //opencv data vars
         //VideoCapture capture; //camera feed
         
-        Mat
-        gaugeForground,    //text color layer
-        gaugeAlpha,        //text draw layer
-        image_roi;        //roi of output image
+        Mat image_roi;        //roi of output image
         
-        //release memory
-        gaugeForground.release();
-        gaugeAlpha.release();
-        
-        /*
+        /*we are just gonna be lazy instead lol
          int x1, x2, x3, y1, y2, y3;
         x1 = getX();
         //need some sort of logic to figure out what quadrant the things are
@@ -281,31 +265,21 @@
         y1 = getY();
         
         */
-        int size = getGaugeSize();
-        //allocate images based on text settings
-        gaugeForground = Mat(size*2, size*2, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        gaugeAlpha = Mat(size*2, size*2, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        
-        //draw ellipses onto alpha layer
-        ellipse(gaugeAlpha, Point(size,size), Size(size, size), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
         //ellipse(textAlpha, Point(0,textAlpha.size().height/2+20), getGaugeSize(), angleIncrement, startAngle, endAngle, Scalar(255), thickness, lineType, shift);
         
         
         
         //check that the ellipse is in frame so the bitwise operations don't crash
-        if(getX()-gaugeAlpha.size().width/2 < 0 || getY()-gaugeAlpha.size().height/2 < 0 || getX()-gaugeAlpha.size().width/2 + gaugeAlpha.size().width > img.size().width || getY() + gaugeAlpha.size().height > img.size().height)
-        {//need to edit the conditional based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        if(getX()-this->_gaugeAlpha.size().width/2 < 0 || getY()-this->_gaugeAlpha.size().height/2 < 0 || getX()-this->_gaugeAlpha.size().width/2 + this->_gaugeAlpha.size().width > img.size().width || getY() + this->_gaugeAlpha.size().height > img.size().height){
             cout <<"[WARNING] Gauge goes out of frame"<<endl;
         }
         
         else
         {
-            image_roi = img(Rect(getX()-gaugeAlpha.size().width/2, getY()-gaugeAlpha.size().height/2, gaugeAlpha.size().width, gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-            bitwise_and(image_roi, Scalar(0), image_roi, gaugeAlpha);
-            bitwise_or(image_roi, gaugeForground, image_roi,gaugeAlpha);
+            image_roi = img(Rect(getX()-this->_gaugeAlpha.size().width/2, getY()-this->_gaugeAlpha.size().height/2, this->_gaugeAlpha.size().width, this->_gaugeAlpha.size().height));//need to edit the instantiation of the Rect based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+            bitwise_and(image_roi, Scalar(0), image_roi, this->_gaugeAlpha);
+            bitwise_or(image_roi, this->_gaugeForeground, image_roi,this->_gaugeAlpha);
         }
-        
-        imshow("Alpha: Gauge", gaugeAlpha);
         
     }
 
@@ -383,9 +357,144 @@
         
     }
 
-    void Gauge::_updateBackground(int r, int g, int b){
-        //not sure what this one is meant to do
-        //I think it just update every component of the gauge
+    void Gauge::_updateTicker(){
+        this->_tickerForeground.release();
+        this->_tickerAlpha.release();
+        
+        while(getGaugeValue()>360) setGaugeValue(getGaugeValue()-360);//ensures that the degrees inputted into sin and cos functions does not exceed 360
+        
+        int degrees = getGaugeValue();//might need to add the angleincrement to this so it might need to be a private member variable
+        double radians = degrees * (M_PI/180);
+        int size = getGaugeSize();
+        
+        //need some sort of logic to figure out what quadrant the things are
+        //I have to make sure that negative angles are not inputted
+        //I have to make sure that the end angle and angleIncrement does not go over 360 (I could just substract 360 from them)
+        //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
+        
+        if(0<=degrees && degrees<=90){
+             this->_tickerAlphaX = getX();
+             this->_tickerAlphaY = getY() - round((sin(radians))*size);
+             radians = degrees * (M_PI/180);
+             if(degrees == 0){
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size) + 5;
+                 this->_startingXTicker = 0;
+                 this->_startingYTicker = 2;
+                 this->_endingXTicker = this->_tickerWidth;
+                 this->_endingYTicker = 2;
+             } else if(degrees == 90) {
+                 this->_tickerWidth = round((cos(radians))*size) + 5;
+                 this->_tickerHeight = round((sin(radians))*size);
+                 this->_startingXTicker = 2;
+                 this->_startingYTicker = this->_tickerHeight;
+                 this->_endingXTicker = 2;
+                 this->_endingYTicker = 0;
+             } else {
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size);
+                 this->_startingXTicker = 0;
+                 this->_startingYTicker = this->_tickerHeight;
+                 this->_endingXTicker = this->_tickerWidth;
+                 this->_endingYTicker = 0;
+            }
+         } else if(90<degrees && degrees<=180){
+             degrees = 180 - degrees;
+             radians = degrees * (M_PI/180);
+             this->_tickerAlphaX = getX() - round((cos(radians))*size);
+             this->_tickerAlphaY = getY() - round((sin(radians))*size);
+             if(degrees == 0){
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size) + 5;
+                 this->_startingXTicker = this->_tickerWidth;
+                 this->_startingYTicker = 2;
+                 this->_endingXTicker = 0;
+                 this->_endingYTicker = 2;
+            } else {
+             this->_tickerWidth = round((cos(radians))*size);
+             this->_tickerHeight = round((sin(radians))*size);
+             this->_startingXTicker = this->_tickerWidth;
+             this->_startingYTicker = this->_tickerHeight;
+             this->_endingXTicker = 0;
+             this->_endingYTicker = 0;
+            }
+         } else if(180<degrees && degrees<=270){
+             degrees = degrees - 180;
+             radians = degrees * (M_PI/180);
+             this->_tickerAlphaX = getX() - round((cos(radians))*size);
+             this->_tickerAlphaY = getY();
+             if(degrees == 90){
+                 this->_tickerWidth = round((cos(radians))*size) + 5;
+                 this->_tickerHeight = round((sin(radians))*size);
+                 this->_startingXTicker = 2;
+                 this->_startingYTicker = 0;
+                 this->_endingXTicker = 2;
+                 this->_endingYTicker = this->_tickerHeight;
+             } else {
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size);
+                 this->_startingXTicker = this->_tickerWidth;
+                 this->_startingYTicker = 0;
+                 this->_endingXTicker = 0;
+                 this->_endingYTicker = this->_tickerHeight;
+            }
+         } else {
+             degrees = 360 - degrees;
+             radians = degrees * (M_PI/180);
+             this->_tickerAlphaX = getX();
+             this->_tickerAlphaY = getY();
+             if(degrees == 0){
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size) + 5;
+                 this->_startingXTicker = 0;
+                 this->_startingYTicker = 2;
+                 this->_endingXTicker = this->_tickerWidth;
+                 this->_endingYTicker = 2;
+             } else {
+                 this->_tickerWidth = round((cos(radians))*size);
+                 this->_tickerHeight = round((sin(radians))*size);
+                 this->_startingXTicker = 0;
+                 this->_startingYTicker = 0;
+                 this->_endingXTicker = this->_tickerWidth;
+                 this->_endingYTicker = this->_tickerHeight;
+            }
+         }
+        
+        
+        //allocate images based on text settings
+        this->_tickerForeground = Mat(this->_tickerHeight, this->_tickerWidth, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        this->_tickerAlpha = Mat(this->_tickerHeight, this->_tickerWidth, CV_8UC1, Scalar(0));//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        _drawLocalTicker();
+    }
+
+    void Gauge::_drawLocalTicker(){
+        int lineType = LINE_8;
+        int shift = 0;
+        line(this->_tickerAlpha, Point(this->_startingXTicker, this->_startingYTicker), Point(this->_endingXTicker, this->_endingYTicker), getBackgroundColor(), getThickness(), lineType, shift);
+    }
+
+    void Gauge::_updateGauge(){
+        this->_gaugeForeground.release();
+        this->_gaugeAlpha.release();
+        
+        int size = getGaugeSize();
+        
+        //allocate images based on text settings
+        this->_gaugeForeground = Mat(size*2, size*2, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        this->_gaugeAlpha = Mat(size*2, size*2, CV_8UC1, Scalar(0));
+        
+        _drawLocalArc();
+    }
+
+    void Gauge::_drawLocalArc(){
+        int shift = 0;
+        int lineType = LINE_8;
+        int angleIncrement = 0;
+        int startAngle = 0;
+        int endAngle = 360;
+        
+        //draw ellipses onto alpha layer
+        ellipse(this->_gaugeAlpha, Point(this->_gaugeAlpha.size().width/2,this->_gaugeAlpha.size().width/2), Size(getGaugeSize(), getGaugeSize()), angleIncrement, startAngle, endAngle, Scalar(255), getThickness(), lineType, shift);
     }
 
     int Gauge::getX(){
@@ -398,11 +507,13 @@
 
     void Gauge::setX(int x){
         this->_xPos = x;
+        _updateTicker();
         //will need to redraw the entire gauge
     }
 
     void Gauge::setY(int y){
         this->_yPos = y;
+        _updateTicker();
         //will need to redraw the entire gauge
     }
 
@@ -438,6 +549,7 @@
 
     void Gauge::setGaugeValue(int value){
         this->_currentValue = value;
+        _updateTicker();
         //_drawTicker(this->_currentValue, this->_img);
     }
 
@@ -460,7 +572,7 @@
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
-        _drawTicker(this->_img);
+        _updateTicker();
     }
 
     int Gauge::getImageWidth(){
@@ -478,4 +590,11 @@
     void Gauge::setGaugeSize(int size, Mat img){
         this->_size = size;
         drawGauge(img);
+    }
+
+    int Gauge::getThickness(){
+        return this->_thickness;
+    }
+    void Gauge::setThickness(int thickness){
+        this->_thickness = thickness;
     }

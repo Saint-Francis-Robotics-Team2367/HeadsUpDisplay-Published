@@ -45,7 +45,15 @@ private:
     int _g;
     int _b;
     int _thickness;
+    int _tBoxBorderThickness;
+    int _tBoxFont;
+    int _tBoxBaseline;
+    double _tBoxFontScale;
     Mat _img;
+    Mat _textForeground;
+    Mat _textAlpha;
+    Mat _borderForeground;
+    Mat _borderAlpha;
     string _text;
     
     
@@ -53,8 +61,11 @@ private:
     //not sure how to add an array member to this header class without already predefining the length of the array...
     
     void _drawText(Mat img);
-    void _drawBorder();
-
+    void _updateText();
+    void _drawLocalText();
+    void _drawBorder(Mat img);
+    void _updateBorder();
+    void _drawLocalBorder();
     
 };
 

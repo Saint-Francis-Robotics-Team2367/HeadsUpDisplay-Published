@@ -23,10 +23,22 @@ class BarGraph
 {
     
 public:
-    BarGraph();
-    BarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha);
-    Mat drawBarGraph();
-    void updateGraph(int fill);
+    BarGraph();//done
+    BarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha);//done
+    Mat drawBarGraph(Mat img);//done
+    void updateGraph(int fill);//done
+    int getX();
+    void setX(int x);
+    int getY();
+    void setY(int y);
+    int getCurrentFill();
+    void setCurrentFill();
+    int getIncrement();
+    void setIncrement(double increment);
+    Scalar getBackgroundColor();
+    void setBackgroundColor(int r, int g, int b, Mat img);
+    int getBarGraphSize();
+    void setBarGraphSize(int size, Mat img);
     //gotta add all the mat files in maybe an array since you will have a finite amount per bargraph
     //add setters and getters
     

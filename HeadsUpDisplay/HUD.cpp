@@ -198,7 +198,7 @@
     }
 
     void HUD::drawBarGraphs(Mat img){
-        for(int i=0; i<this->_bargraphs.size(); i++) this->_bargraphs[i].drawBarGraph();
+        for(int i=0; i<this->_bargraphs.size(); i++) this->_bargraphs[i].drawBarGraph(img);
     }
 
     void HUD::drawTextLists(Mat img){
@@ -216,7 +216,7 @@
         Mat img;
         img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
         //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
-        
+        int i = 0;
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
@@ -233,10 +233,18 @@
                 //this->_capture >> img;
                 img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
                 if(img.empty()) break;
-                
                 drawGauges(img);
+                this->_gauges[0].setGaugeValue(i);
+                cout<<this->_gauges.size()<<endl;
+                i++;
+                //then I can call the updateGauge() function and pass in another random Mat with the same height, width, and type
+                //then I can slap that Mat onto Mat img and imshow Mat img <-- Only issue is I don't know if using imshow again to draw Mat img is basically redrawing the Gauge again :(
+                //drawGauges(img);
                 //drawBarGraphs(img); WIP
                 drawTextLists(img);
+                //so I have one method in Gauge() that can bitwise and/or
+                //I have another method in Gauge() that draws onto a local Mat whenever it gets new data
+                //WOOOOOOOOOOOOOOOOOOOOO IT ALL MAKES SENSE NOW!!!
                 
                 //only release things when I am changing the actual image like updating it or something
                 

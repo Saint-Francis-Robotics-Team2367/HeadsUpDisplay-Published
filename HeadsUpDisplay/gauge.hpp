@@ -27,7 +27,7 @@ public:
     Gauge();
     Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);//done
     Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);//done
-    Mat drawGauge(Mat img);//done
+    void drawGauge(Mat img);//done
     int getX();//done
     int getY();
     void setX(int x);
@@ -48,6 +48,8 @@ public:
     void setUpperRange(int upperRange, Mat img);
     int getGaugeSize();
     void setGaugeSize(int size, Mat img);
+    int getThickness();
+    void setThickness(int thickness);
     
     
 private:
@@ -68,15 +70,30 @@ private:
     int _gTicker;
     int _bTicker;
     int _thickness;
+    int _startingXTicker;
+    int _startingYTicker;
+    int _endingXTicker;
+    int _endingYTicker;
+    int _tickerAlphaX;
+    int _tickerAlphaY;
+    int _tickerWidth;
+    int _tickerHeight;
     Mat _img;
+    Mat _gaugeForeground;
+    Mat _gaugeAlpha;
+    Mat _tickerForeground;
+    Mat _tickerAlpha;
     bool _showMin;
     bool _showMax;
     
     
-    void _drawInitialGauge(int value, int r, int g, int b, Mat img);
+    void _drawInitialGauge();
     void _drawTicker(Mat img);
+    void _drawLocalTicker();
     void _drawArc(Mat img);
-    void _updateBackground(int r, int g, int b);//will use current value for redrawing ticker
+    void _drawLocalArc();
+    void _updateTicker();//will use current value for redrawing ticker
+    void _updateGauge();//needs to be implemented
     void _gaugeLogic(int x1, int x2, int x3, int y1, int y2, int y3);
     
 };

@@ -30,7 +30,7 @@
         this->_thickness = 4;
     }
 
-    Mat BarGraph::drawBarGraph(){
+    Mat BarGraph::drawBarGraph(Mat img){
         _drawInnerRectangle(0);
         _drawOuterRectangle();
         _drawBaseLine();
@@ -47,7 +47,9 @@
     }
 
     void BarGraph::_drawInnerRectangle(int fill){
-        
+        //need to draw a filled rectangle CV_FILLED
+        int shift = 0;
+        rectangle(this->_img, Point(400,400), Point(500,500), Scalar(0,0,255), CV_FILLED, LINE_8, shift);
     }
 
     void BarGraph::_drawOuterRectangle(){
