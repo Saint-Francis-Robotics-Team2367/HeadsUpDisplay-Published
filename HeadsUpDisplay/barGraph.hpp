@@ -24,21 +24,21 @@ class BarGraph
     
 public:
     BarGraph();//done
-    BarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha);//done
-    Mat drawBarGraph(Mat img);//done
-    void updateGraph(int fill);//done
+    BarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha);//done
+    void drawBarGraph(Mat img);//done
     int getX();
     void setX(int x);
     int getY();
     void setY(int y);
     int getCurrentFill();
-    void setCurrentFill();
+    void setCurrentFill(int newFill);
     int getIncrement();
-    void setIncrement(double increment);
-    Scalar getBackgroundColor();
-    void setBackgroundColor(int r, int g, int b, Mat img);
-    int getBarGraphSize();
-    void setBarGraphSize(int size, Mat img);
+    void setIncrement(int increment);//does it really matter if it is an int or a double
+    Scalar getBackgroundColor();//change the name of this in Gauge and here and wherever else it shows up
+    void setBackgroundColor(int r, int g, int b);
+    int getBarGraphWidth();
+    int getBarGraphHeight();
+    void setBarGraphSize(int width, int height);
     //gotta add all the mat files in maybe an array since you will have a finite amount per bargraph
     //add setters and getters
     
@@ -49,16 +49,27 @@ private:
     int _r;
     int _g;
     int _b;
+    int _width;
+    int _height;
+    int _heightOfInnerRectangle;
+    int _increment;
     int _alpha;
     double _scaleValues;
     int _scaleSize;
-    int _height;
     int _thickness;
-    Mat _img;
+    Mat _innerRectangleForeground;
+    Mat _innerRectangleAlpha;
+    Mat _outerRectangleForeground;
+    Mat _outerRectangleAlpha;
     
-    void _drawInnerRectangle(int fill);
-    void _drawOuterRectangle();
-    void _drawBaseLine();
+    void _drawInnerRectangle(Mat img);//done
+    void _updateInnerRectangle();//done
+    void _drawLocalInnerRectangle();//done
+    void _drawOuterRectangle(Mat img);//done
+    void _updateOuterRectangle();//done
+    void _drawLocalOuterRectangle();//done
+    void _drawInitialBarGraph();
+    //void _drawBaseLine(); not sure if this is absolutely necessary
     
 };
 

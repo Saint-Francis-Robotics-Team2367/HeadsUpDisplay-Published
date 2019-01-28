@@ -26,7 +26,7 @@ class TextList
 public:
     TextList();
     TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
-    Mat drawList(Mat img);
+    void drawList(Mat img);
     string editText(string newText);
     void setX(int x);
     int getX();

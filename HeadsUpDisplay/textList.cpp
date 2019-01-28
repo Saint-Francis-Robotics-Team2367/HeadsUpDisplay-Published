@@ -9,8 +9,6 @@
 #include "textList.hpp"
 
     TextList::TextList(){
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0,0));//is there a better way to implement creating a Mat like this into the line below?
-        this->_img = img;
         this->_xPos = 0;
         this->_yPos = 0;
         this->_scaleTextSize = 1;
@@ -26,10 +24,6 @@
     }
 
     TextList::TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0,0));//is there a better way to implement creating a Mat like this into the line below?
-        this->_img = img;
-        //Mat img2(Size(800,600), Scalar(0,255,0));
-        //this->list;do I not need to instantiate the vector?
         this->_xPos = x;
         this->_yPos = y;
         this->_scaleTextSize = scaleTextSize;
@@ -44,10 +38,9 @@
         this->_tBoxFontScale = 1;
     }
 
-    Mat TextList::drawList(Mat img){
+    void TextList::drawList(Mat img){
         _drawText(img);
         _drawBorder(img);
-        return this->_img;
     }
 
     string TextList::editText(string newText){
@@ -62,12 +55,11 @@
         return this->_xPos;
     }
 
-    int TextList::getY(){
-        return this->_yPos;
-    }
-
     void TextList::setX(int x){
         this->_xPos = x;
+    }
+    int TextList::getY(){
+        return this->_yPos;
     }
 
     void TextList::setY(int y){
@@ -78,7 +70,7 @@
         return Scalar(this->_r, this->_g, this->_b);
     }
 
-    void TextList::setColor(int r, int g, int b, Mat img){
+    void TextList::setColor(int r, int g, int b, Mat img){//maybe I can make a rainbow color mode for fun or something
         this->_r = r;
         this->_g = g;
         this->_b = b;

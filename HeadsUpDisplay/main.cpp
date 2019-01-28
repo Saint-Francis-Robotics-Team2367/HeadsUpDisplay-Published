@@ -37,6 +37,7 @@ int main(int argc, const char * argv[]) {
 
     hud->addTextList();
     hud->addGauge(300, 200, 0, 100, 100, 250, 200, 100, 255);//int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha
+    hud->addBarGraph(100, 100, 1, 20, 100, 100, 250, 50, 255);//int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha
     //There needs to be a minimum size of 5 or something for the gauge because things start to get hairy once you go below that
     hud->drawAll();
     /*

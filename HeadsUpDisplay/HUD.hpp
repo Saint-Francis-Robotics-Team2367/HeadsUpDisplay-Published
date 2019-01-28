@@ -37,8 +37,8 @@ public:
     void addTextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
     void addTextList(int index);
     void addTextList();
-    void addBarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha, int index);
-    void addBarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha);
+    void addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha, int index);
+    void addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha);
     void addBarGraph(int index);
     void addBarGraph();
     Gauge removeGauge(int index);

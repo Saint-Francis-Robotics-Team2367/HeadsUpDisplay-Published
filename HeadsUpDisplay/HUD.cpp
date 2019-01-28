@@ -72,16 +72,16 @@
         TextList list;
         this->_lists.push_back(list);
     }
-    void HUD::addBarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha, int index){
-        BarGraph bargraph(x, y, scaleValues, height, r, g, b, alpha);
+    void HUD::addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha, int index){
+        BarGraph bargraph(x, y, scaleValues, width, height, r, g, b, alpha);
         try{
             this->_bargraphs.insert(this->_bargraphs.begin()+index, bargraph);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
         }
     }
-    void HUD::addBarGraph(int x, int y, int scaleValues, int height, int r, int g, int b, int alpha){
-        BarGraph bargraph(x, y, scaleValues, height, r, g, b, alpha);
+    void HUD::addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha){
+        BarGraph bargraph(x, y, scaleValues, width, height, r, g, b, alpha);
         this->_bargraphs.push_back(bargraph);
     }
     void HUD::addBarGraph(int index){
@@ -217,6 +217,8 @@
         img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
         //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
         int i = 0;
+        int j = 1;
+        int multiplier = 1;
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
@@ -235,13 +237,16 @@
                 if(img.empty()) break;
                 drawGauges(img);
                 this->_gauges[0].setGaugeValue(i);
-                cout<<this->_gauges.size()<<endl;
                 i++;
                 //then I can call the updateGauge() function and pass in another random Mat with the same height, width, and type
                 //then I can slap that Mat onto Mat img and imshow Mat img <-- Only issue is I don't know if using imshow again to draw Mat img is basically redrawing the Gauge again :(
                 //drawGauges(img);
                 //drawBarGraphs(img); WIP
                 drawTextLists(img);
+                drawBarGraphs(img);
+                this->_bargraphs[0].setCurrentFill(j);
+                j += multiplier;
+                if(j>=100 || j <=1) multiplier *= -1;
                 //so I have one method in Gauge() that can bitwise and/or
                 //I have another method in Gauge() that draws onto a local Mat whenever it gets new data
                 //WOOOOOOOOOOOOOOOOOOOOO IT ALL MAKES SENSE NOW!!!

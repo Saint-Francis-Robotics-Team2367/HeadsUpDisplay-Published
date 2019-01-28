@@ -25,7 +25,6 @@
         this->_increment = 1;
         this->_currentValue = 0;
         this->_thickness = 4;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         _drawInitialGauge();
     }
 
@@ -47,7 +46,6 @@
         this->_showMin = showMin;
         this->_showMax = showMax;
         this->_thickness = 4;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         _drawInitialGauge();
     }
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
@@ -68,7 +66,6 @@
         this->_showMin = false;
         this->_showMax = false;
         this->_thickness = 4;
-        Mat img(Size(800,600), CV_8UC4, Scalar(0,255,0));//is there a better way to implement creating a Mat like this into the line below?
         _drawInitialGauge();
     }
     
@@ -79,9 +76,7 @@
     
     void Gauge::_drawInitialGauge(){
         _updateGauge();
-        _drawLocalArc();
         _updateTicker();
-        _drawLocalTicker();
     }
     
     void Gauge::_drawTicker(Mat img){
@@ -358,6 +353,7 @@
     }
 
     void Gauge::_updateTicker(){
+        //release memory
         this->_tickerForeground.release();
         this->_tickerAlpha.release();
         
@@ -365,7 +361,8 @@
         
         int degrees = getGaugeValue();//might need to add the angleincrement to this so it might need to be a private member variable
         double radians = degrees * (M_PI/180);
-        int size = getGaugeSize();
+        int size = getGaugeSize();//wouldn't it be easier to just use this->_size everywhere instead of this?
+        //also doesn't cpp not garbage collect including variables even when we leave scope of the method...sooooo this is super inefficient???
         
         //need some sort of logic to figure out what quadrant the things are
         //I have to make sure that negative angles are not inputted
@@ -373,8 +370,8 @@
         //I have to make sure that the start angle does not go over the end angle (I could just switch the values in my code)
         
         if(0<=degrees && degrees<=90){
-             this->_tickerAlphaX = getX();
-             this->_tickerAlphaY = getY() - round((sin(radians))*size);
+             this->_tickerAlphaX = this->_xPos;
+             this->_tickerAlphaY = this->_yPos - round((sin(radians))*size);
              radians = degrees * (M_PI/180);
              if(degrees == 0){
                  this->_tickerWidth = round((cos(radians))*size);
@@ -401,8 +398,8 @@
          } else if(90<degrees && degrees<=180){
              degrees = 180 - degrees;
              radians = degrees * (M_PI/180);
-             this->_tickerAlphaX = getX() - round((cos(radians))*size);
-             this->_tickerAlphaY = getY() - round((sin(radians))*size);
+             this->_tickerAlphaX = this->_xPos - round((cos(radians))*size);
+             this->_tickerAlphaY = this->_yPos - round((sin(radians))*size);
              if(degrees == 0){
                  this->_tickerWidth = round((cos(radians))*size);
                  this->_tickerHeight = round((sin(radians))*size) + 5;
@@ -421,8 +418,8 @@
          } else if(180<degrees && degrees<=270){
              degrees = degrees - 180;
              radians = degrees * (M_PI/180);
-             this->_tickerAlphaX = getX() - round((cos(radians))*size);
-             this->_tickerAlphaY = getY();
+             this->_tickerAlphaX = this->_xPos - round((cos(radians))*size);
+             this->_tickerAlphaY = this->_yPos;
              if(degrees == 90){
                  this->_tickerWidth = round((cos(radians))*size) + 5;
                  this->_tickerHeight = round((sin(radians))*size);
@@ -441,8 +438,8 @@
          } else {
              degrees = 360 - degrees;
              radians = degrees * (M_PI/180);
-             this->_tickerAlphaX = getX();
-             this->_tickerAlphaY = getY();
+             this->_tickerAlphaX = this->_xPos;
+             this->_tickerAlphaY = this->_yPos;
              if(degrees == 0){
                  this->_tickerWidth = round((cos(radians))*size);
                  this->_tickerHeight = round((sin(radians))*size) + 5;
@@ -474,12 +471,13 @@
     }
 
     void Gauge::_updateGauge(){
+        //release memory
         this->_gaugeForeground.release();
         this->_gaugeAlpha.release();
         
         int size = getGaugeSize();
         
-        //allocate images based on text settings
+        //allocate images based on gauge settings
         this->_gaugeForeground = Mat(size*2, size*2, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
         this->_gaugeAlpha = Mat(size*2, size*2, CV_8UC1, Scalar(0));
         
@@ -550,7 +548,7 @@
     void Gauge::setGaugeValue(int value){
         this->_currentValue = value;
         _updateTicker();
-        //_drawTicker(this->_currentValue, this->_img);
+        //_drawTicker(img);
     }
 
     Scalar Gauge::getBackgroundColor(){
@@ -575,21 +573,13 @@
         _updateTicker();
     }
 
-    int Gauge::getImageWidth(){
-        return this->_width;
-    }
-
-    int Gauge::getImageHeight(){
-        return this->_height;
-    }
-
     int Gauge::getGaugeSize(){
         return this->_size;
     }
 
-    void Gauge::setGaugeSize(int size, Mat img){
+    void Gauge::setGaugeSize(int size){
         this->_size = size;
-        drawGauge(img);
+        _updateGauge();
     }
 
     int Gauge::getThickness(){

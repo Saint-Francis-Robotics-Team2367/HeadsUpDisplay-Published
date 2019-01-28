@@ -40,14 +40,12 @@ public:
     void setBackgroundColor(int r, int g, int b, Mat img);
     Scalar getTickerColor();
     void setTickerColor(int r, int g, int b);
-    int getImageWidth();//in pixels
-    int getImageHeight();//in pixels
     int getLowerRange();
     void setLowerRange(int lowerRange, Mat img);
     int getUpperRange();
     void setUpperRange(int upperRange, Mat img);
     int getGaugeSize();
-    void setGaugeSize(int size, Mat img);
+    void setGaugeSize(int size);
     int getThickness();
     void setThickness(int thickness);
     
@@ -78,7 +76,6 @@ private:
     int _tickerAlphaY;
     int _tickerWidth;
     int _tickerHeight;
-    Mat _img;
     Mat _gaugeForeground;
     Mat _gaugeAlpha;
     Mat _tickerForeground;
