@@ -8,5 +8,5 @@ coming from an onboard processing system in the form of gauges, bargraphs, lines
 
 It is currently going to be tested with a live videostream through the use of the VideoCapture() class.
 
-**Installation Script through terminal:**
+**Installation Script through Terminal:**
 `curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/master/installHUD.sh?token=AOStZK_evU3RnuGhMNVqUEzuWYwmqqpdks5cXLwrwA%3D%3D | bash`
