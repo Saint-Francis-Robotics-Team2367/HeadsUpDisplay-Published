@@ -24,30 +24,38 @@ class Gauge
 {
     
 public:
-    Gauge();
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);//done
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);//done
-    void drawGauge(Mat img);//done
-    int getX();//done
+    Gauge(); //constructor 1
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax); //constructor 2
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha); //constructor 3
+    void drawGauge(Mat img);
+    int getX();
     int getY();
     void setX(int x);
     void setY(int y);
     int getIncrement();
     void setIncrement(double increment);
     int getGaugeValue();
-    void setGaugeValue(int value);//done
-    Scalar getBackgroundColor();
-    void setBackgroundColor(int r, int g, int b, Mat img);
+    void setGaugeValue(int value);
+    Scalar getGaugeColor();
+    void setGaugeColor(int r, int g, int b);
     Scalar getTickerColor();
     void setTickerColor(int r, int g, int b);
     int getLowerRange();
-    void setLowerRange(int lowerRange, Mat img);
+    void setLowerRange(int lowerRange);
     int getUpperRange();
-    void setUpperRange(int upperRange, Mat img);
+    void setUpperRange(int upperRange);
     int getGaugeSize();
     void setGaugeSize(int size);
     int getThickness();
     void setThickness(int thickness);
+    int getAngleIncrement();
+    void setAngleIncrement(int angleIncrement);
+    int getEndAngle();
+    void setEndAngle(int endAngle);
+    void showGauge();
+    void showTicker();
+    void hideGauge();
+    void hideTicker();
     
     
 private:
@@ -57,6 +65,8 @@ private:
     int _upperRange;
     int _size;
     double _increment;
+    int _angleIncrement;
+    int _endAngle;
     int _width;
     int _height;
     int _currentValue;
@@ -82,7 +92,8 @@ private:
     Mat _tickerAlpha;
     bool _showMin;
     bool _showMax;
-    
+    bool _showGauge;
+    bool _showTicker;
     
     void _drawInitialGauge();
     void _drawTicker(Mat img);

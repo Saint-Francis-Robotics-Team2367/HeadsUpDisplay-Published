@@ -35,22 +35,22 @@ public:
     void addGauge();
     void addTextList(int x, int y, int scaleTextSize,  int r, int g, int b, int alpha, int index);
     void addTextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
-    void addTextList(int index);
-    void addTextList();
+    void addTextList(int index); //adds a TextList() object before the given index in the vector for TextLists
+    void addTextList(); //adds a TextList() object at the end of the vector for TextLists
     void addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha, int index);
     void addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha);
     void addBarGraph(int index);
     void addBarGraph();
-    Gauge removeGauge(int index);
-    TextList removeTextList(int index);
-    BarGraph removeBarGraph(int index);
-    Gauge replaceGauge(int index, Gauge replaceGauge);
-    TextList replaceTextList(int index, TextList replaceList);
-    BarGraph replaceBarGraph(int index, BarGraph replaceBargraph);
-    Gauge frontGauge();
-    TextList frontTextList();
-    BarGraph frontBarGraph();
-    Gauge backGauge();
+    Gauge removeGauge(int index); //removes Gauge() element from _gauges at specified index
+    TextList removeTextList(int index); //removes TextList() element from _lists at specified index
+    BarGraph removeBarGraph(int index); //removes BarGraph() element from _bargraphs at specified index
+    Gauge replaceGauge(int index, Gauge replaceGauge); //replaces Gauge() with a new instance of the class at specified index
+    TextList replaceTextList(int index, TextList replaceList); //replaces TextList() at specified index
+    BarGraph replaceBarGraph(int index, BarGraph replaceBargraph); //replaces BarGraph() at specified index
+    Gauge frontGauge(); //returns first reference to a Gauge in _gauges
+    TextList frontTextList(); //returns first reference to a TextList() in _lists
+    BarGraph frontBarGraph(); //returns first reference to a BarGraph in _bargraphs
+    Gauge backGauge(); //returns first reference to a Gauge in _gauges
     TextList backTextList();
     BarGraph backBarGraph();
     Gauge atGauge(int index);

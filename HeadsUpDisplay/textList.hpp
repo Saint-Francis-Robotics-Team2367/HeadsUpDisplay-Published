@@ -28,12 +28,14 @@ public:
     TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
     void drawList(Mat img);
     string editText(string newText);
-    void setX(int x);
     int getX();
-    void setY(int y);
+    void setX(int x);
     int getY();
-    void setColor(int r, int g, int b, Mat img);
-    Scalar getColor();
+    void setY(int y);
+    Scalar getTextColor();
+    void setTextColor(int r, int g, int b);
+    Scalar getBorderColor();
+    void setBorderColor(int r, int g, int b);
     int getStringLength();
     
     
@@ -41,9 +43,12 @@ private:
     int _xPos;
     int _yPos;
     int _scaleTextSize;
-    int _r;
-    int _g;
-    int _b;
+    int _rText;
+    int _gText;
+    int _bText;
+    int _rBorder;
+    int _gBorder;
+    int _bBorder;
     int _thickness;
     int _tBoxBorderThickness;
     int _tBoxFont;
@@ -66,6 +71,7 @@ private:
     void _drawBorder(Mat img);
     void _updateBorder();
     void _drawLocalBorder();
+    void _drawInitialTextList();
     
 };
 

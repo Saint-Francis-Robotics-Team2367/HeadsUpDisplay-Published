@@ -13,9 +13,12 @@
         this->_y = 0;
         this->_scaleValues = 1;
         this->_height = 50;
-        this->_r = 0;
-        this->_g = 0;
-        this->_b = 0;
+        this->_rInner = 0;
+        this->_gInner = 0;
+        this->_bInner = 0;
+        this->_rOuter = 0;
+        this->_gOuter = 0;
+        this->_bOuter = 0;
         this->_increment = 1;
         this->_alpha = 0;
         this->_thickness = 4;
@@ -29,9 +32,12 @@
         this->_scaleValues = scaleValues;
         this->_width = width;
         this->_height = height;
-        this->_r = r;
-        this->_g = g;
-        this->_b = b;
+        this->_rInner = r;
+        this->_gInner = g;
+        this->_bInner = b;
+        this->_rOuter = r;
+        this->_gOuter = g;
+        this->_bOuter = b;
         this->_increment = 1;
         this->_alpha = alpha;
         this->_thickness = 4;
@@ -51,11 +57,12 @@
     }
 
     void BarGraph::_drawInnerRectangle(Mat img){
-        Mat image_roi;        //roi of output image
+        Mat image_roi; //roi of output image
         int x = getX();
         int y = getY() + (this->_height - this->_heightOfInnerRectangle);
+        
         //check that the outer rectangle is in frame so the bitwise operations don't crash
-        if(x < 0 || y < 0 || x+this->_innerRectangleAlpha.size().width > img.size().width || y + this->_innerRectangleAlpha.size().height > img.size().height){
+        if(x < 0 || y < 0 || x + this->_innerRectangleAlpha.size().width > img.size().width || y + this->_innerRectangleAlpha.size().height > img.size().height){
             cout <<"[WARNING] Outer Rectangle goes out of frame"<<endl;
         }
         
@@ -75,14 +82,14 @@
         this->_heightOfInnerRectangle = this->_height * this->_fill/100;
         if(this->_heightOfInnerRectangle>this->_height) this->_heightOfInnerRectangle = this->_height;
         
-        this->_innerRectangleForeground = Mat(this->_heightOfInnerRectangle, this->_width, CV_8UC3, getBackgroundColor());
-        this->_innerRectangleAlpha = Mat(this->_heightOfInnerRectangle, this->_width, CV_8UC1, Scalar(0));
+        this->_innerRectangleForeground = Mat(this->_heightOfInnerRectangle + this->_thickness, this->_width + this->_thickness, CV_8UC3, getInnerRectangleColor());
+        this->_innerRectangleAlpha = Mat(this->_heightOfInnerRectangle + this->_thickness, this->_width + this->_thickness, CV_8UC1, Scalar(0));
         _drawLocalInnerRectangle();
     }
 
     void BarGraph::_drawLocalInnerRectangle(){
         int shift = 0;
-        rectangle(this->_innerRectangleAlpha, Point(0,0), Point(this->_innerRectangleAlpha.size().width,this->_innerRectangleAlpha.size().height), getBackgroundColor(), CV_FILLED, LINE_8, shift);
+        rectangle(this->_innerRectangleAlpha, Point(0,0), Point(this->_innerRectangleAlpha.size().width,this->_innerRectangleAlpha.size().height), Scalar(255), CV_FILLED, LINE_8, shift);
     }
 
     /*void BarGraph::_drawBaseLine(){not sure if I really need baseline
@@ -113,14 +120,14 @@
         this->_outerRectangleForeground.release();
         this->_outerRectangleAlpha.release();
         
-        this->_outerRectangleForeground = Mat(this->_height, this->_width, CV_8UC3, getBackgroundColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        this->_outerRectangleAlpha = Mat(this->_height, this->_width, CV_8UC1, Scalar(0));
+        this->_outerRectangleForeground = Mat(this->_height + this->_thickness, this->_width + this->_thickness, CV_8UC3, getOuterRectangleColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        this->_outerRectangleAlpha = Mat(this->_height + this->_thickness, this->_width + this->_thickness, CV_8UC1, Scalar(0));
         _drawLocalOuterRectangle();
     }
 
     void BarGraph::_drawLocalOuterRectangle(){
         int shift = 0;
-        rectangle(this->_outerRectangleAlpha, Point(0,0), Point(this->_outerRectangleAlpha.size().width,this->_outerRectangleAlpha.size().height), getBackgroundColor(), this->_thickness, LINE_8, shift);
+        rectangle(this->_outerRectangleAlpha, Point(0,0), Point(this->_outerRectangleAlpha.size().width,this->_outerRectangleAlpha.size().height), Scalar(255), this->_thickness, LINE_8, shift);
     }
 
     int BarGraph::getX(){
@@ -158,14 +165,26 @@
         this->_increment = increment;
     }
 
-    Scalar BarGraph::getBackgroundColor(){
-        return Scalar(this->_r,this->_g,this->_b);
+    Scalar BarGraph::getInnerRectangleColor(){
+        return Scalar(this->_bInner,this->_gInner,this->_rInner);
     }
 
-    void BarGraph::setBackgroundColor(int r, int g, int b){
-        this->_r = r;
-        this->_g = g;
-        this->_b = b;
+    void BarGraph::setInnerRectangleColor(int r, int g, int b){
+        this->_rInner = r;
+        this->_gInner = g;
+        this->_bInner = b;
+        _updateOuterRectangle();
+        _updateInnerRectangle();
+    }
+
+    Scalar BarGraph::getOuterRectangleColor(){
+        return Scalar(this->_bOuter,this->_gOuter,this->_rOuter);
+    }
+
+    void BarGraph::setOuterRectangleColor(int r, int g, int b){
+        this->_rOuter = r;
+        this->_gOuter = g;
+        this->_bOuter = b;
         _updateOuterRectangle();
         _updateInnerRectangle();
     }

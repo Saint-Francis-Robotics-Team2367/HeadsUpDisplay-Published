@@ -34,8 +34,10 @@ public:
     void setCurrentFill(int newFill);
     int getIncrement();
     void setIncrement(int increment);//does it really matter if it is an int or a double
-    Scalar getBackgroundColor();//change the name of this in Gauge and here and wherever else it shows up
-    void setBackgroundColor(int r, int g, int b);
+    Scalar getInnerRectangleColor();//change the name of this in Gauge and here and wherever else it shows up
+    void setInnerRectangleColor(int r, int g, int b);
+    Scalar getOuterRectangleColor();//change the name of this in Gauge and here and wherever else it shows up
+    void setOuterRectangleColor(int r, int g, int b);
     int getBarGraphWidth();
     int getBarGraphHeight();
     void setBarGraphSize(int width, int height);
@@ -46,9 +48,12 @@ private:
     int _x;
     int _y;
     int _fill;
-    int _r;
-    int _g;
-    int _b;
+    int _rInner;
+    int _gInner;
+    int _bInner;
+    int _rOuter;
+    int _gOuter;
+    int _bOuter;
     int _width;
     int _height;
     int _heightOfInnerRectangle;

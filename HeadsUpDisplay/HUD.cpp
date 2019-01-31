@@ -60,7 +60,7 @@
         TextList list(x, y, scaleTextSize, r, g, b, alpha);
         this->_lists.push_back(list);
     }
-    void HUD::addTextList(int index){//adds a TextList() object before the given index in the vector for TextLists
+    void HUD::addTextList(int index){
         TextList list;
         try {
             this->_lists.insert(this->_lists.begin()+index, list);
@@ -68,7 +68,7 @@
             cout << exception.what() << endl;
         }
     }
-    void HUD::addTextList(){//adds a TextList() object at the end of the vector for TextLists
+    void HUD::addTextList(){
         TextList list;
         this->_lists.push_back(list);
     }
@@ -96,8 +96,7 @@
         BarGraph bargraph;
         this->_bargraphs.push_back(bargraph);
     }
-    Gauge HUD::removeGauge(int index){//removes Gauge() element from _gauges at specified index
-        //need to do some error handling in case they ask to replace an index out of bounds
+    Gauge HUD::removeGauge(int index){
         Gauge gauge;
         try{
             Gauge gauge = this->_gauges[index];
@@ -108,8 +107,8 @@
         }
         return gauge;
     }
-    TextList HUD::removeTextList(int index){//removes TextList() element from _lists at specified index
-        //need to do some error handling in case they ask to replace an index out of bounds
+
+    TextList HUD::removeTextList(int index){
         TextList list;
         try{
             TextList list = this->_lists[index];
@@ -120,8 +119,8 @@
         }
         return list;
     }
-    BarGraph HUD::removeBarGraph(int index){//removes BarGraph() element from _bargraphs at specified index
-        //need to do some error handling in case they ask to replace an index out of bounds
+
+    BarGraph HUD::removeBarGraph(int index){
         BarGraph bargraph;
         try{
             BarGraph bargraph = this->_bargraphs[index];
@@ -132,8 +131,8 @@
         }
         return bargraph;
     }
-    Gauge HUD::replaceGauge(int index, Gauge replaceGauge){//replaces Gauge() at specified index
-        //need to do some error handling in case they ask to replace an index out of bounds
+
+    Gauge HUD::replaceGauge(int index, Gauge replaceGauge){
         Gauge oldgauge;
         try{
             Gauge oldgauge = this->_gauges[index];
@@ -144,8 +143,8 @@
         }
         return oldgauge;
     }
-    TextList HUD::replaceTextList(int index, TextList replaceList){//replaces TextList() at specified index
-        //need to do some error handling in case they ask to replace an index out of bounds
+
+    TextList HUD::replaceTextList(int index, TextList replaceList){
         TextList oldList;
         try{
             TextList oldList = this->_lists[index];
@@ -156,10 +155,15 @@
         }
         return oldList;
     }
-    BarGraph HUD::replaceBarGraph(int index, BarGraph replaceBargraph){
-        //need to do some error handling in case they ask to replace an index out of bounds
-        BarGraph oldbargraph = this->_bargraphs[index];
-        this->_bargraphs[index] = replaceBargraph;
+    BarGraph HUD::replaceBarGraph(int index, BarGraph replaceBargraph){        
+        BarGraph oldbargraph;
+        try{
+            BarGraph oldbargraph = this->_bargraphs[index];
+            this->_bargraphs[index] = replaceBargraph;
+            return oldbargraph;
+        } catch (out_of_range exception) {
+            cout << exception.what() << endl;
+        }
         return oldbargraph;
     }
     Gauge HUD::frontGauge(){
@@ -219,14 +223,19 @@
         int i = 0;
         int j = 1;
         int multiplier = 1;
+        int r=0, g=0, b=0;
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
                 gettimeofday(&currFrameTime, NULL);
                 long int ms =(currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);//NEED TO FIX: The ms value is stuck at 0 for some reason
-                text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));//FPS value is messed up since ms is stuck at 0
+                text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));
                 lastFrameTime = currFrameTime;
                 this->_lists[0].editText(text);
+                
+                //I need to make a class that can read image files and update the HUD whenever it gets the chance
+                //The class needs to have a very specific thread that it uses when it is connected to the server, and by the fact that it has that very specific string as it's tag so to speak it will, it will receive the raw image
+                //It is going to be a completely different project
                 
                 //if(i<=this->_lists.size()-1) this->_lists[0].addText(text);
                 //i++;
@@ -237,26 +246,31 @@
                 if(img.empty()) break;
                 drawGauges(img);
                 this->_gauges[0].setGaugeValue(i);
+                if(i%1==0){
+                    r = (rand() % 256);
+                    g = (rand() % 256);
+                    b = (rand() % 256);
+                }
+                this->_gauges[0].setTickerColor(r, g, b);
                 i++;
                 //then I can call the updateGauge() function and pass in another random Mat with the same height, width, and type
-                //then I can slap that Mat onto Mat img and imshow Mat img <-- Only issue is I don't know if using imshow again to draw Mat img is basically redrawing the Gauge again :(
-                //drawGauges(img);
-                //drawBarGraphs(img); WIP
+                //then I can slap that Mat onto Mat img and imshow Mat img
                 drawTextLists(img);
                 drawBarGraphs(img);
+                this->_lists[0].setTextColor(r, g, b);
+                this->_bargraphs[0].setInnerRectangleColor(r, g, b);
                 this->_bargraphs[0].setCurrentFill(j);
                 j += multiplier;
                 if(j>=100 || j <=1) multiplier *= -1;
                 //so I have one method in Gauge() that can bitwise and/or
                 //I have another method in Gauge() that draws onto a local Mat whenever it gets new data
-                //WOOOOOOOOOOOOOOOOOOOOO IT ALL MAKES SENSE NOW!!!
                 
                 //only release things when I am changing the actual image like updating it or something
                 
-                //log the cpu clock after alloc and draw
+                //log the cpu clock after allocations, update functions, and draw functions
                 currTime = clock();
                 
-                imshow("Sample", img);
+                imshow("Heads Up Display", img);
             }
         }
     }

@@ -12,30 +12,43 @@
         this->_xPos = 0;
         this->_yPos = 0;
         this->_scaleTextSize = 1;
-        this->_r = 0;
-        this->_g = 0;
-        this->_b = 0;
-        this->_thickness = 4;
+        this->_rText = 0;
+        this->_gText = 0;
+        this->_bText = 0;
+        this->_rBorder = 0;
+        this->_gBorder = 0;
+        this->_bBorder = 0;
+        this->_thickness = 2;
         this->_text = "";
         this->_tBoxBorderThickness = 1;
         this->_tBoxFont = FONT_HERSHEY_COMPLEX_SMALL;
         this->_tBoxBaseline = 0;
         this->_tBoxFontScale = 1;
+        _drawInitialTextList();
     }
 
     TextList::TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
         this->_xPos = x;
         this->_yPos = y;
         this->_scaleTextSize = scaleTextSize;
-        this->_r = r;
-        this->_g = g;
-        this->_b = b;
-        this->_thickness = 4;
+        this->_rText = r;
+        this->_gText = g;
+        this->_bText = b;
+        this->_rBorder = r;
+        this->_gBorder = g;
+        this->_bBorder = b;
+        this->_thickness = 2;
         this->_text = "";
         this->_tBoxBorderThickness = 1;
         this->_tBoxFont = FONT_HERSHEY_COMPLEX_SMALL;
         this->_tBoxBaseline = 0;
         this->_tBoxFontScale = 1;
+        _drawInitialTextList();
+    }
+
+    void TextList::_drawInitialTextList(){
+        _updateText();
+        _updateBorder();
     }
 
     void TextList::drawList(Mat img){
@@ -66,15 +79,26 @@
         this->_yPos = y;
     }
 
-    Scalar TextList::getColor(){
-        return Scalar(this->_r, this->_g, this->_b);
+    Scalar TextList::getTextColor(){
+        return Scalar(this->_bText, this->_gText, this->_rText);
     }
 
-    void TextList::setColor(int r, int g, int b, Mat img){//maybe I can make a rainbow color mode for fun or something
-        this->_r = r;
-        this->_g = g;
-        this->_b = b;
+    void TextList::setTextColor(int r, int g, int b){//maybe I can make a rainbow color mode for fun or something
+        this->_rText = r;
+        this->_gText = g;
+        this->_bText = b;
         _updateText();
+    }
+
+    Scalar TextList::getBorderColor(){
+        return Scalar(this->_bBorder, this->_gBorder, this->_rBorder);
+    }
+
+    void TextList::setBorderColor(int r, int g, int b){//maybe I can make a rainbow color mode for fun or something
+        this->_rBorder = r;
+        this->_gBorder = g;
+        this->_bBorder = b;
+        _updateBorder();
     }
 
     void TextList::_drawText(Mat img){
@@ -110,7 +134,8 @@
         tBoxBorderSize = getTextSize(this->_text,this->_tBoxFont,this->_tBoxFontScale, this->_thickness, &this->_tBoxBaseline);
         
         //allocate images based on text settings
-        this->_textForeground = Mat(tBoxBorderSize.height + this->_tBoxBaseline, tBoxBorderSize.width,CV_8UC3,getColor());
+        
+        this->_textForeground = Mat(tBoxBorderSize.height + this->_tBoxBaseline, tBoxBorderSize.width,CV_8UC3,getTextColor());
         this->_textAlpha = Mat(tBoxBorderSize.height + this->_tBoxBaseline, tBoxBorderSize.width,CV_8UC1,Scalar(0));
         _drawLocalText();
     }
@@ -126,16 +151,17 @@
         //rectangle(this->_img, Point(400,400), Point(500,500), Scalar(0,0,255), this->_thickness, LINE_8, shift);//need to calculate the space the strings inputted take
         rectangle(this->_borderAlpha, Point(getX(),getY()), Point(this->_textAlpha.size().width, this->_textAlpha.size().height), Scalar(255), this->_thickness, LINE_8, shift);//need to calculate the space the strings inputted take
         Mat image_roi; //roi of output image
-        
+        int x = getX() - this->_thickness;
+        int y = getY() - this->_thickness;
         //check that the text is in frame so the bitwise ops don't crash
-        if(getX() + this->_borderAlpha.size().width > img.size().width || getY() + this->_borderAlpha.size().height > img.size().height)
+        if(x < 0 || y<0 || x + this->_borderAlpha.size().width > img.size().width || y + this->_borderAlpha.size().height > img.size().height)
         {
-            cout << "[WARNING] Text goes out of frame" <<endl;
+            cout << "[WARNING] Border goes out of frame" <<endl;
         }
         
         else
         {
-            image_roi = img(Rect(getX(), getY(), this->_borderAlpha.size().width, this->_borderAlpha.size().height));
+            image_roi = img(Rect(x, y, this->_borderAlpha.size().width, this->_borderAlpha.size().height));
             bitwise_and(image_roi, Scalar(0), image_roi, this->_borderAlpha);
             bitwise_or(image_roi, this->_borderForeground, image_roi, this->_borderAlpha);
         }
@@ -146,15 +172,17 @@
         this->_borderForeground.release();
         this->_borderAlpha.release();
         
-        this->_borderForeground = Mat(_textAlpha.size().height, _textAlpha.size().width,CV_8UC3,getColor());
-        this->_borderAlpha = Mat(_textAlpha.size().height, _textAlpha.size().width,CV_8UC1,Scalar(0));
+        this->_borderForeground = Mat(_textAlpha.size().height + this->_thickness, _textAlpha.size().width + this->_thickness,CV_8UC3,getBorderColor());
+        this->_borderAlpha = Mat(_textAlpha.size().height + this->_thickness, _textAlpha.size().width + this->_thickness,CV_8UC1,Scalar(0));
         
         _drawLocalBorder();
     }
 
     void TextList::_drawLocalBorder(){
         int shift = 0;
-        rectangle(this->_borderAlpha, Point(0,0), Point(this->_textAlpha.size().width, this->_textAlpha.size().height), Scalar(255), this->_thickness, LINE_8, shift);
+        
+        //draw border for text onto alpha layer
+        rectangle(this->_borderAlpha, Point(0,0), Point(this->_borderAlpha.size().width, this->_borderAlpha.size().height), Scalar(255), this->_thickness, LINE_8, shift);
     }
 
     int TextList::getStringLength(){
