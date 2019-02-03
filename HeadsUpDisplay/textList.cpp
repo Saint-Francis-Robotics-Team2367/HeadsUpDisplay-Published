@@ -8,6 +8,7 @@
 
 #include "textList.hpp"
 
+    //constructor 1
     TextList::TextList(){
         this->_xPos = 0;
         this->_yPos = 0;
@@ -27,6 +28,7 @@
         _drawInitialTextList();
     }
 
+    //constructor 2
     TextList::TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
         this->_xPos = x;
         this->_yPos = y;
@@ -51,7 +53,7 @@
         _updateBorder();
     }
 
-    void TextList::drawList(Mat img){
+    void TextList::drawTextList(Mat img){
         _drawText(img);
         _drawBorder(img);
     }
@@ -83,22 +85,20 @@
         return Scalar(this->_bText, this->_gText, this->_rText);
     }
 
-    void TextList::setTextColor(int r, int g, int b){//maybe I can make a rainbow color mode for fun or something
+    void TextList::setTextColor(int r, int g, int b){
         this->_rText = r;
         this->_gText = g;
         this->_bText = b;
-        _updateText();
     }
 
     Scalar TextList::getBorderColor(){
         return Scalar(this->_bBorder, this->_gBorder, this->_rBorder);
     }
 
-    void TextList::setBorderColor(int r, int g, int b){//maybe I can make a rainbow color mode for fun or something
+    void TextList::setBorderColor(int r, int g, int b){
         this->_rBorder = r;
         this->_gBorder = g;
         this->_bBorder = b;
-        _updateBorder();
     }
 
     void TextList::_drawText(Mat img){
@@ -107,10 +107,11 @@
         Mat image_roi; //roi of output image
         int x = getX() + 2;
         int y = getY() + 2;
+        
         //check that the text is in frame so the bitwise ops don't crash
-        if(x + this->_textAlpha.size().width > img.size().width || y + this->_textAlpha.size().height > img.size().height)
+        if(x<0 || y<0 || x + this->_textAlpha.size().width > img.size().width || y + this->_textAlpha.size().height > img.size().height || !this->_showText)
         {
-            cout << "[WARNING] Text goes out of frame" <<endl;
+            cout << "[WARNING] Text goes out of frame or is hidden" <<endl;
         }
         
         else
@@ -145,18 +146,18 @@
         putText(this->_textAlpha, this->_text, Point(0,this->_textAlpha.size().height-this->_tBoxBaseline), this->_tBoxFont, this->_tBoxFontScale, Scalar(255), this->_thickness);
     }
 
-    void TextList::_drawBorder(Mat img){//need to figure out the size of the characters on the screen
+    void TextList::_drawBorder(Mat img){
         int shift = 0;
-        //can have a method called max string length called here to figure out what size to actually make the border rect
-        //rectangle(this->_img, Point(400,400), Point(500,500), Scalar(0,0,255), this->_thickness, LINE_8, shift);//need to calculate the space the strings inputted take
-        rectangle(this->_borderAlpha, Point(getX(),getY()), Point(this->_textAlpha.size().width, this->_textAlpha.size().height), Scalar(255), this->_thickness, LINE_8, shift);//need to calculate the space the strings inputted take
+        
         Mat image_roi; //roi of output image
+        
         int x = getX() - this->_thickness;
         int y = getY() - this->_thickness;
+        
         //check that the text is in frame so the bitwise ops don't crash
-        if(x < 0 || y<0 || x + this->_borderAlpha.size().width > img.size().width || y + this->_borderAlpha.size().height > img.size().height)
+        if(x < 0 || y<0 || x + this->_borderAlpha.size().width > img.size().width || y + this->_borderAlpha.size().height > img.size().height || !this->_showBorder)
         {
-            cout << "[WARNING] Border goes out of frame" <<endl;
+            cout << "[WARNING] Border goes out of frame or is hidden" <<endl;
         }
         
         else
@@ -187,4 +188,20 @@
 
     int TextList::getStringLength(){
         return this->_text.length();
+    }
+
+    void TextList::showText(){
+        this->_showText = true;
+    }
+
+    void TextList::showBorder(){
+        this->_showBorder = true;
+    }
+
+    void TextList::hideText(){
+        this->_showText = false;
+    }
+
+    void TextList::hideBorder(){
+        this->_showBorder = false;
     }

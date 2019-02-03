@@ -8,6 +8,7 @@
 
 #include "gauge.hpp"
 
+    //constructor 1
     Gauge::Gauge(){
         this->_xPos = 0;
         this->_yPos = 0;
@@ -32,6 +33,7 @@
         _drawInitialGauge();
     }
 
+    //constructor 2
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
         this->_xPos = x;
         this->_yPos = y;
@@ -55,6 +57,7 @@
         _drawInitialGauge();
     }
 
+    //constructor 3
     Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
         this->_xPos = x;
         this->_yPos = y;
@@ -116,6 +119,8 @@
             bitwise_and(image_roi, Scalar(0), image_roi, this->_gaugeAlpha);
             bitwise_or(image_roi, this->_gaugeForeground, image_roi,this->_gaugeAlpha);
         }
+        
+        imshow("Gauge Alpha", this->_gaugeAlpha);
         
     }
 
@@ -342,16 +347,10 @@
 
     void Gauge::setX(int x){
         this->_xPos = x;
-        _updateGauge();
-        _updateTicker();
-        //will need to redraw the entire gauge
     }
 
     void Gauge::setY(int y){
         this->_yPos = y;
-        _updateGauge();
-        _updateTicker();
-        //will need to redraw the entire gauge
     }
 
     int Gauge::getLowerRange(){
@@ -401,8 +400,6 @@
         this->_r = r;
         this->_g = g;
         this->_b = b;
-        _updateGauge();
-        _updateTicker();
     }
 
     Scalar Gauge::getTickerColor(){
@@ -413,7 +410,6 @@
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
-        _updateTicker();
     }
 
     int Gauge::getGaugeSize(){

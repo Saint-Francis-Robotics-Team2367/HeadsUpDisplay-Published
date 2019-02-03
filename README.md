@@ -8,6 +8,9 @@ coming from an onboard processing system in the form of gauges, bargraphs, lines
 
 It is currently going to be tested with a live videostream through the use of the VideoCapture() class.
 
+**Documentation:**
+`https://docs.google.com/document/d/1sqLKF9MTwBlhPmWDXRrIBfmYMgjToeO5ulkTKaWTRcM`
+
 **Installation Script for Mac OS:**
 `curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/master/installHUD.sh?token=AOStZK_evU3RnuGhMNVqUEzuWYwmqqpdks5cXLwrwA%3D%3D | bash`
 

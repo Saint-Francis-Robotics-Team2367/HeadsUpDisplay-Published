@@ -24,9 +24,9 @@ class Gauge
 {
     
 public:
-    Gauge(); //constructor 1
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax); //constructor 2
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha); //constructor 3
+    Gauge();
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);
+    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);
     void drawGauge(Mat img);
     int getX();
     int getY();
@@ -100,10 +100,10 @@ private:
     void _drawLocalTicker();
     void _drawArc(Mat img);
     void _drawLocalArc();
-    void _updateTicker();//will use current value for redrawing ticker
-    void _updateGauge();//needs to be implemented
+    void _updateTicker();
+    void _updateGauge();
     void _gaugeLogic(int x1, int x2, int x3, int y1, int y2, int y3);
     
 };
 
-#endif // GAUGE_H
+#endif /* gauge.hpp */

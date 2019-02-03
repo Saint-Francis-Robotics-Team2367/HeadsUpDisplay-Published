@@ -12,18 +12,20 @@
         
     }
 
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, int index){
-        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
+    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax, int index){
+        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha, increment, startingValue, showMin, showMax);
         try{
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
         }
     }
+
     void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha, increment, startingValue, showMin, showMax);
         this->_gauges.push_back(gauge);
     }
+
     void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index){
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
         try{
@@ -36,6 +38,7 @@
         Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
         this->_gauges.push_back(gauge);
     }
+
     void HUD::addGauge(int index){
         Gauge gauge;
         try{
@@ -185,20 +188,35 @@
         return this->_bargraphs.back();
     }
     Gauge HUD::atGauge(int index){
-        //need to do some error handling in case they ask to replace an index out of bounds
-        return this->_gauges.at(index);
+        Gauge missingGauge;
+        try{
+            return this->_gauges.at(index);
+        } catch (out_of_range exception) {
+            cout << exception.what() << endl;
+        }
+        return missingGauge;
     }
     TextList HUD::atTextList(int index){
-        //need to do some error handling in case they ask to replace an index out of bounds
-        return this->_lists.at(index);
+        TextList missingTextList;
+        try{
+            return this->_lists.at(index);
+        } catch (out_of_range exception) {
+            cout << exception.what() << endl;
+        }
+        return missingTextList;
     }
     BarGraph HUD::atBarGraph(int index){
-        //need to do some error handling in case they ask to replace an index out of bounds
-        return this->_bargraphs.at(index);
+        BarGraph missingBarGraph;
+        try{
+            return this->_bargraphs.at(index);
+        } catch (out_of_range exception) {
+            cout << exception.what() << endl;
+        }
+        return missingBarGraph;
     }
 
     void HUD::drawGauges(Mat img){
-        for(int i=0; i<this->_gauges.size(); i++) this->_gauges[i].drawGauge(img);//0, 2, 3, 7, 8, 10 does not work
+        for(int i=0; i<this->_gauges.size(); i++) this->_gauges[i].drawGauge(img);
     }
 
     void HUD::drawBarGraphs(Mat img){
@@ -206,7 +224,7 @@
     }
 
     void HUD::drawTextLists(Mat img){
-        for(int i=0; i<this->_lists.size(); i++) this->_lists[i].drawList(img);
+        for(int i=0; i<this->_lists.size(); i++) this->_lists[i].drawTextList(img);
     }
 
     void HUD::drawAll(){
@@ -237,8 +255,6 @@
                 //The class needs to have a very specific thread that it uses when it is connected to the server, and by the fact that it has that very specific string as it's tag so to speak it will, it will receive the raw image
                 //It is going to be a completely different project
                 
-                //if(i<=this->_lists.size()-1) this->_lists[0].addText(text);
-                //i++;
                 //log the cpu clock to see how long the alloc and draw takes
                 startTime = clock();
                 //this->_capture >> img;
@@ -253,8 +269,6 @@
                 }
                 this->_gauges[0].setTickerColor(r, g, b);
                 i++;
-                //then I can call the updateGauge() function and pass in another random Mat with the same height, width, and type
-                //then I can slap that Mat onto Mat img and imshow Mat img
                 drawTextLists(img);
                 drawBarGraphs(img);
                 this->_lists[0].setTextColor(r, g, b);
@@ -262,10 +276,6 @@
                 this->_bargraphs[0].setCurrentFill(j);
                 j += multiplier;
                 if(j>=100 || j <=1) multiplier *= -1;
-                //so I have one method in Gauge() that can bitwise and/or
-                //I have another method in Gauge() that draws onto a local Mat whenever it gets new data
-                
-                //only release things when I am changing the actual image like updating it or something
                 
                 //log the cpu clock after allocations, update functions, and draw functions
                 currTime = clock();

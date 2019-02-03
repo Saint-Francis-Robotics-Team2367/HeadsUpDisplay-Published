@@ -5,26 +5,6 @@
 //  Created by Jeevan Prakash on 11/24/18.
 //  Copyright © 2018 Jeevan Prakash. All rights reserved.
 //
-/*
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
-#include <iostream>
-#include <fstream>
-#include <unistd.h>
-#include <tuple>
-#include "gauge.hpp"
-#include "textList.hpp"
-
-
-
-using namespace cv;
-using namespace std;
-*/
-
-#include <iostream>
-#include <string>
-#include <vector>
 
 #include "HUD.hpp"
 

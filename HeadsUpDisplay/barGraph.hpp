@@ -23,9 +23,9 @@ class BarGraph
 {
     
 public:
-    BarGraph();//done
+    BarGraph();
     BarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha);//done
-    void drawBarGraph(Mat img);//done
+    void drawBarGraph(Mat img);
     int getX();
     void setX(int x);
     int getY();
@@ -41,8 +41,10 @@ public:
     int getBarGraphWidth();
     int getBarGraphHeight();
     void setBarGraphSize(int width, int height);
-    //gotta add all the mat files in maybe an array since you will have a finite amount per bargraph
-    //add setters and getters
+    void showInner();
+    void showOuter();
+    void hideInner();
+    void hideOuter();
     
 private:
     int _x;
@@ -66,6 +68,8 @@ private:
     Mat _innerRectangleAlpha;
     Mat _outerRectangleForeground;
     Mat _outerRectangleAlpha;
+    bool _showInner;
+    bool _showOuter;
     
     void _drawInnerRectangle(Mat img);//done
     void _updateInnerRectangle();//done
@@ -78,4 +82,4 @@ private:
     
 };
 
-#endif /* barGraph_hpp */
+#endif /* barGraph.hpp */

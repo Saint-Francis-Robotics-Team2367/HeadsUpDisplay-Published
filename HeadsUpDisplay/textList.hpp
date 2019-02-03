@@ -26,7 +26,7 @@ class TextList
 public:
     TextList();
     TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
-    void drawList(Mat img);
+    void drawTextList(Mat img);
     string editText(string newText);
     int getX();
     void setX(int x);
@@ -37,7 +37,10 @@ public:
     Scalar getBorderColor();
     void setBorderColor(int r, int g, int b);
     int getStringLength();
-    
+    void showText();
+    void showBorder();
+    void hideText();
+    void hideBorder();
     
 private:
     int _xPos;
@@ -60,10 +63,8 @@ private:
     Mat _borderForeground;
     Mat _borderAlpha;
     string _text;
-    
-    
-    //std::string categories[5];//I can have a String array with the length of the number of different things I want to display
-    //not sure how to add an array member to this header class without already predefining the length of the array...
+    bool _showText;
+    bool _showBorder;
     
     void _drawText(Mat img);
     void _updateText();
@@ -75,4 +76,4 @@ private:
     
 };
 
-#endif /* textList_hpp */
+#endif /* textList.hpp */
