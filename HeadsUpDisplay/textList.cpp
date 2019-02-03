@@ -25,6 +25,8 @@
         this->_tBoxFont = FONT_HERSHEY_COMPLEX_SMALL;
         this->_tBoxBaseline = 0;
         this->_tBoxFontScale = 1;
+        this->_showText = true;
+        this->_showBorder = true;
         _drawInitialTextList();
     }
 
@@ -45,6 +47,8 @@
         this->_tBoxFont = FONT_HERSHEY_COMPLEX_SMALL;
         this->_tBoxBaseline = 0;
         this->_tBoxFontScale = 1;
+        this->_showText = true;
+        this->_showBorder = true;
         _drawInitialTextList();
     }
 

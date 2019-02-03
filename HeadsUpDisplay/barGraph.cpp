@@ -24,6 +24,8 @@
         this->_alpha = 0;
         this->_thickness = 4;
         this->_fill = 10;
+        this->_showInner = true;
+        this->_showOuter = true;
         _drawInitialBarGraph();
     }
 
@@ -44,6 +46,8 @@
         this->_alpha = alpha;
         this->_thickness = 4;
         this->_fill = 10;
+        this->_showInner = true;
+        this->_showOuter = true;
         _drawInitialBarGraph();
     }
 
@@ -63,7 +67,7 @@
         int y = getY() + (this->_height - this->_heightOfInnerRectangle);
         
         //check that the outer rectangle is in frame so the bitwise operations don't crash
-        if(x < 0 || y < 0 || x + this->_innerRectangleAlpha.size().width > img.size().width || y + this->_innerRectangleAlpha.size().height > img.size().height || this->_showInner){
+        if(x < 0 || y < 0 || x + this->_innerRectangleAlpha.size().width > img.size().width || y + this->_innerRectangleAlpha.size().height > img.size().height || !this->_showInner){
             cout <<"[WARNING] Outer Rectangle goes out of frame or is hidden"<<endl;
         }
         
@@ -103,7 +107,7 @@
         Mat image_roi; //roi of output image
         
         //check that the outer rectangle is in frame so the bitwise operations don't crash
-        if(getX() < 0 || getY() < 0 || getX()+this->_outerRectangleAlpha.size().width > img.size().width || getY() + this->_outerRectangleAlpha.size().height > img.size().height || this->_showOuter){
+        if(getX() < 0 || getY() < 0 || getX()+this->_outerRectangleAlpha.size().width > img.size().width || getY() + this->_outerRectangleAlpha.size().height > img.size().height || !this->_showOuter){
             cout <<"[WARNING] Outer Rectangle goes out of frame or is hidden"<<endl;
         }
         
