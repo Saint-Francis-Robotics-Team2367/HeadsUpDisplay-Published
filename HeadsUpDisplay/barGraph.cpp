@@ -84,6 +84,9 @@
         this->_innerRectangleForeground.release();
         this->_innerRectangleAlpha.release();
         
+        if(this->_fill < 0) this->_fill = this->_fill * -1;
+        else while(this->_fill > 100) this->_fill = this->_fill - 100;
+        
         this->_heightOfInnerRectangle = this->_height * this->_fill/100;
         if(this->_heightOfInnerRectangle>this->_height) this->_heightOfInnerRectangle = this->_height;
         
@@ -100,7 +103,7 @@
     /*void BarGraph::_drawBaseLine(){not sure if I really need baseline as of right now
         int thickness = 1;
         int shift = 0;
-        line(this->_img, Point(this->_x+20, this->_y+50), Point(this->_x, this->_y), Scalar(0,255,255), thickness, LINE_8, shift);
+        line(this->_img, Point(this->_x+20, this->_y+50), Point(this->_x, this->_y), Scalar(0,255,255), thickness, LINE_8, shift);Make it apparent in the documentation that you put in the percentage of fill for the bargraph, and I need to implement the gauge the same way and make it apparent in the documentation
      }*/
 
     void BarGraph::_drawOuterRectangle(Mat img){

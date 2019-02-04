@@ -246,7 +246,7 @@
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
                 gettimeofday(&currFrameTime, NULL);
-                long int ms =(currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);//NEED TO FIX: The ms value is stuck at 0 for some reason
+                long int ms = (currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);
                 text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));
                 lastFrameTime = currFrameTime;
                 this->_lists[0].editText(text);

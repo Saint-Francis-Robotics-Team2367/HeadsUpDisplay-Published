@@ -16,3 +16,5 @@ It is currently going to be tested with a live videostream through the use of th
 
 **Installation Script for Linux OS**
 `curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/master/installHUD.sh?token=AOStZK_evU3RnuGhMNVqUEzuWYwmqqpdks5cXLwrwA%3D%3D | bash`
+
+*Disclaimer: The linux script has not be implemented correctly yet*

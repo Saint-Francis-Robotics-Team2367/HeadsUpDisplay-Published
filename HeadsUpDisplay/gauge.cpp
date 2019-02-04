@@ -192,11 +192,11 @@
         this->_tickerForeground.release();
         this->_tickerAlpha.release();
         
-        //ensures that the degrees inputted into sin and cos functions does not exceed 360 or go below 0
-        if(getGaugeValue()<0) setGaugeSize(getGaugeValue() + 360);
-        else while(getGaugeValue()>360) setGaugeValue(getGaugeValue()-360);
+        //ensures that the percentange inputted does not exceed 100 or go below 0
+        if(this->_currentValue < 0) this->_currentValue = this->_currentValue * -1;
+        else while(this->_currentValue > 100) this->_currentValue = this->_currentValue - 100;
         
-        int degrees = getGaugeValue();//might need to add the angleincrement to this so it might need to be a private member variable
+        int degrees = 360 * this->_currentValue / 100;//might need to add the angleincrement to this so it might need to be a private member variable
         //I need to make it so that the user inputs a percent of the total gauge, also the user needs to be able to input how many degrees the gauge needs to go
         //The angle increment and all that can be changed later in more methods (probably going to have more member variables and setters and getters *sigh*
         //convert degrees into radians
