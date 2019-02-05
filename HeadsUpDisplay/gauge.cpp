@@ -34,16 +34,16 @@
     }
 
     //constructor 2
-    Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
+    Gauge::Gauge(int x, int y, int size, int r, int g, int b, double increment, int startingValue, bool showMin, bool showMax){
         this->_xPos = x;
         this->_yPos = y;
-        this->_lowerRange = lowerRange;
-        this->_upperRange = upperRange;
+        this->_lowerRange = 0;
+        this->_upperRange = 10;
         this->_size = size;
         this->_r = r;
         this->_g = g;
         this->_b = b;
-        this->_alpha = alpha;
+        this->_alpha = 255;
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
@@ -54,20 +54,22 @@
         this->_showGauge = true;
         this->_showTicker = true;
         this->_thickness = 4;
+        this->_angleIncrement = 0;
+        this->_endAngle = 360;
         _drawInitialGauge();
     }
 
     //constructor 3
-    Gauge::Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
+    Gauge::Gauge(int x, int y, int size, int r, int g, int b){
         this->_xPos = x;
         this->_yPos = y;
-        this->_lowerRange = lowerRange;
-        this->_upperRange = upperRange;
+        this->_lowerRange = 0;
+        this->_upperRange = 10;
         this->_size = size;
         this->_r = r;
         this->_g = g;
         this->_b = b;
-        this->_alpha = alpha;
+        this->_alpha = 255;
         this->_rTicker = r;
         this->_gTicker = g;
         this->_bTicker = b;
@@ -78,18 +80,48 @@
         this->_showGauge = true;
         this->_showTicker = true;
         this->_thickness = 4;
+        this->_angleIncrement = 0;
+        this->_endAngle = 360;
         _drawInitialGauge();
     }
-    
-    void Gauge::drawGauge(Mat img){
-        _drawArc(img);
-        _drawTicker(img);
+
+    //constructor 4
+    Gauge::Gauge(int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle){
+        this->_xPos = x;
+        this->_yPos = y;
+        this->_lowerRange = 0;
+        this->_upperRange = 10;
+        this->_size = size;
+        this->_r = r;
+        this->_g = g;
+        this->_b = b;
+        this->_alpha = 255;
+        this->_rTicker = r;
+        this->_gTicker = g;
+        this->_bTicker = b;
+        this->_angleIncrement = angleIncrement;
+        this->_currentValue = startingValue;
+        this->_showMin = false;
+        this->_showMax = false;
+        this->_showGauge = true;
+        this->_showTicker = true;
+        this->_thickness = 4;
+        this->_angleIncrement = -angleIncrement;
+        this->_endAngle = -endAngle;
+        _drawInitialGauge();
     }
     
     void Gauge::_drawInitialGauge(){
         _updateGauge();
         _updateTicker();
     }
+
+    void Gauge::drawGauge(Mat img){
+        _drawArc(img);
+        _drawTicker(img);
+    }
+    
+
     
     void Gauge::_drawTicker(Mat img){
         Mat image_roi; //roi of output image
@@ -102,6 +134,8 @@
             bitwise_and(image_roi, Scalar(0), image_roi, this->_tickerAlpha);
             bitwise_or(image_roi, this->_tickerForeground, image_roi, this->_tickerAlpha);
         }
+        
+        imshow("Ticker Alpha", this->_tickerAlpha);
         
     }
 
@@ -196,12 +230,17 @@
         if(this->_currentValue < 0) this->_currentValue = this->_currentValue * -1;
         else while(this->_currentValue > 100) this->_currentValue = this->_currentValue - 100;
         
-        int degrees = 360 * this->_currentValue / 100;//might need to add the angleincrement to this so it might need to be a private member variable
+        int degrees = -this->_endAngle * this->_currentValue / 100;//might need to add the angleincrement to this so it might need to be a private member variable
         //I need to make it so that the user inputs a percent of the total gauge, also the user needs to be able to input how many degrees the gauge needs to go
         //The angle increment and all that can be changed later in more methods (probably going to have more member variables and setters and getters *sigh*
         //convert degrees into radians
+        
+        degrees += -this->_angleIncrement;
+        if(degrees<0) degrees += 360;
+        else while(degrees>360) degrees -= 360;
+        
         double radians = degrees * (M_PI/180);
-        int size = getGaugeSize();//wouldn't it be easier to just use this->_size everywhere instead of this?
+        int size = this->_size - this->_thickness;//wouldn't it be easier to just use this->_size everywhere instead of this?
         //also doesn't cpp not garbage collect including variables even when we leave scope of the method...sooooo this is super inefficient???
         
         //Objeectives of below conditionals:
@@ -301,6 +340,7 @@
         //allocate images based upon the new dimensions and x,y coordinate of the alpha layer that the ticker needs to fit in
         this->_tickerForeground = Mat(this->_tickerHeight, this->_tickerWidth, CV_8UC3, getTickerColor());
         this->_tickerAlpha = Mat(this->_tickerHeight, this->_tickerWidth, CV_8UC1, Scalar(0));
+        
         _drawLocalTicker();
     }
 
@@ -320,8 +360,8 @@
         int size = getGaugeSize();
         
         //allocate images based on gauge settings
-        this->_gaugeForeground = Mat(size*2, size*2, CV_8UC3, getGaugeColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
-        this->_gaugeAlpha = Mat(size*2, size*2, CV_8UC1, Scalar(0));
+        this->_gaugeForeground = Mat(size*2 + this->_thickness, size*2 + this->_thickness, CV_8UC3, getGaugeColor());//need to edit the instantiation based upon the new dimensions and x,y coordinate of the alpha layer that the ellipse needs to fit in
+        this->_gaugeAlpha = Mat(size*2 + this->_thickness, size*2 + this->_thickness, CV_8UC1, Scalar(0));
         
         _drawLocalArc();
     }
@@ -329,12 +369,9 @@
     void Gauge::_drawLocalArc(){
         int shift = 0;
         int lineType = LINE_8;
-        int angleIncrement = 0;//this should be able to change
-        int startAngle = 0;//always starts at 0
-        int endAngle = 360;//this can change but must always be greater 0 and never greater 360
         
         //allocate ellipse based upon the new dimensions and x,y coordinate of the alpha layer that the gauge needs to fit in
-        ellipse(this->_gaugeAlpha, Point(this->_gaugeAlpha.size().width/2,this->_gaugeAlpha.size().width/2), Size(getGaugeSize(), getGaugeSize()), angleIncrement, startAngle, endAngle, Scalar(255), getThickness(), lineType, shift);
+        ellipse(this->_gaugeAlpha, Point(this->_gaugeAlpha.size().width/2,this->_gaugeAlpha.size().width/2), Size(this->_size - this->_thickness, this->_size - this->_thickness), this->_angleIncrement, 0, this->_endAngle, Scalar(255), this->_thickness, lineType, shift);
     }
 
     int Gauge::getX(){
@@ -449,17 +486,21 @@
     }
 
     int Gauge::getAngleIncrement(){
-        return this->_angleIncrement;
+        return -this->_angleIncrement;
     }
 
     void Gauge::setAngleIncrement(int angleIncrement){
-        this->_angleIncrement = angleIncrement;
+        this->_angleIncrement = -angleIncrement;
+        _updateGauge();
+        _updateTicker();
     }
 
     int Gauge::getEndAngle(){
-        return this->_endAngle;
+        return -this->_endAngle;
     }
 
     void Gauge::setEndAngle(int endAngle){
-        this->_endAngle = endAngle;
+        this->_endAngle = -endAngle;
+        _updateGauge();
+        _updateTicker();
     }

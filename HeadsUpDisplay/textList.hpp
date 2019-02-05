@@ -36,6 +36,8 @@ public:
     void setTextColor(int r, int g, int b);
     Scalar getBorderColor();
     void setBorderColor(int r, int g, int b);
+    int getTextFontScale();
+    void setTextFontScale(int newScale);
     int getStringLength();
     void showText();
     void showBorder();

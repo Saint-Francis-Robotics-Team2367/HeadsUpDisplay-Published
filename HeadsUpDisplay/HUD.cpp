@@ -9,33 +9,49 @@
 #include "HUD.hpp"
 
     HUD::HUD(){
-        
+        //static Gauge *MISSING_GAUGE = new Gauge(-1, -1, -1, -1, -1, -1, -1, -1, -1); Don't know how to implement this yet
     }
 
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax, int index){
-        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha, increment, startingValue, showMin, showMax);
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle, int index){
+        Gauge gauge(x, y, size, r, g, b, startingValue, angleIncrement, endAngle);
         try{
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
 
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax){
-        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha, increment, startingValue, showMin, showMax);
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle){
+        Gauge gauge(x, y, size, r, g, b, startingValue, angleIncrement, endAngle);
         this->_gauges.push_back(gauge);
     }
 
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, int index){
-        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b, double increment, int startingValue, bool showMin, bool showMax, int index){
+        Gauge gauge(x, y, size, r, g, b, increment, startingValue, showMin, showMax);
+        try{
+            this->_gauges.insert(this->_gauges.begin()+index, gauge);
+        } catch (out_of_range exception) {
+            cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
+        }
+    }
+
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b, double increment, int startingValue, bool showMin, bool showMax){
+        Gauge gauge(x, y, size, r, g, b, increment, startingValue, showMin, showMax);
+        this->_gauges.push_back(gauge);
+    }
+
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b, int index){
+        Gauge gauge(x, y, size, r, g, b);
         try{
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
         }
     }
-    void HUD::addGauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha){
-        Gauge gauge(x, y, lowerRange, upperRange, size, r, g, b, alpha);
+    void HUD::addGauge(int x, int y, int size, int r, int g, int b){
+        Gauge gauge(x, y, size, r, g, b);
         this->_gauges.push_back(gauge);
     }
 
@@ -45,6 +61,7 @@
             this->_gauges.insert(this->_gauges.begin()+index, gauge);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
     void HUD::addGauge(){
@@ -57,6 +74,7 @@
             this->_lists.insert(this->_lists.begin()+index, list);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
     void HUD::addTextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
@@ -69,6 +87,7 @@
             this->_lists.insert(this->_lists.begin()+index, list);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
     void HUD::addTextList(){
@@ -81,6 +100,7 @@
             this->_bargraphs.insert(this->_bargraphs.begin()+index, bargraph);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
     void HUD::addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha){
@@ -93,46 +113,38 @@
             this->_bargraphs.insert(this->_bargraphs.begin()+index, bargraph);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
     void HUD::addBarGraph(){
         BarGraph bargraph;
         this->_bargraphs.push_back(bargraph);
     }
-    Gauge HUD::removeGauge(int index){
-        Gauge gauge;
+    void HUD::removeGauge(int index){
         try{
-            Gauge gauge = this->_gauges[index];
             this->_gauges.erase(this->_gauges.begin()+index-1);
-            return gauge;
         } catch (std::out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return gauge;
     }
 
-    TextList HUD::removeTextList(int index){
-        TextList list;
+    void HUD::removeTextList(int index){
         try{
-            TextList list = this->_lists[index];
             this->_lists.erase(this->_lists.begin()+index-1);
-            return list;
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return list;
     }
 
-    BarGraph HUD::removeBarGraph(int index){
-        BarGraph bargraph;
+    void HUD::removeBarGraph(int index){
         try{
-            BarGraph bargraph = this->_bargraphs[index];
             this->_bargraphs.erase(this->_bargraphs.begin()+index-1);
-            return bargraph;
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return bargraph;
     }
 
     Gauge HUD::replaceGauge(int index, Gauge replaceGauge){
@@ -143,22 +155,24 @@
             return oldgauge;
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
         return oldgauge;
     }
 
     TextList HUD::replaceTextList(int index, TextList replaceList){
-        TextList oldList;
+        TextList oldList;//if the index is messed up then the program will return a Gauge with all negative values
         try{
             TextList oldList = this->_lists[index];
             this->_lists[index] = replaceList;
             return oldList;
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
         return oldList;
     }
-    BarGraph HUD::replaceBarGraph(int index, BarGraph replaceBargraph){        
+    BarGraph HUD::replaceBarGraph(int index, BarGraph replaceBargraph){
         BarGraph oldbargraph;
         try{
             BarGraph oldbargraph = this->_bargraphs[index];
@@ -166,53 +180,57 @@
             return oldbargraph;
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
         return oldbargraph;
     }
-    Gauge HUD::frontGauge(){
-        return this->_gauges.front();
+    Gauge* HUD::frontGauge(){
+        return &this->_gauges.front();
     }
-    TextList HUD::frontTextList(){
-        return this->_lists.front();
+    TextList* HUD::frontTextList(){
+        return &this->_lists.front();
     }
-    BarGraph HUD::frontBarGraph(){
-        return this->_bargraphs.front();
+    BarGraph* HUD::frontBarGraph(){
+        return &this->_bargraphs.front();
     }
-    Gauge HUD::backGauge(){
-        return this->_gauges.back();
+    Gauge* HUD::backGauge(){
+        return &this->_gauges.back();
     }
-    TextList HUD::backTextList(){
-        return this->_lists.back();
+    TextList* HUD::backTextList(){
+        return &this->_lists.back();
     }
-    BarGraph HUD::backBarGraph(){
-        return this->_bargraphs.back();
+    BarGraph* HUD::backBarGraph(){
+        return &this->_bargraphs.back();
     }
-    Gauge HUD::atGauge(int index){
+    Gauge* HUD::atGauge(int index){
         Gauge missingGauge;
         try{
-            return this->_gauges.at(index);
+            return &this->_gauges.at(index);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return missingGauge;
+        return &missingGauge;
     }
-    TextList HUD::atTextList(int index){
+    TextList* HUD::atTextList(int index){
         TextList missingTextList;
         try{
-            return this->_lists.at(index);
+            return &this->_lists.at(index);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return missingTextList;
+        return &missingTextList;
     }
-    BarGraph HUD::atBarGraph(int index){
+    BarGraph* HUD::atBarGraph(int index){
         BarGraph missingBarGraph;
         try{
-            return this->_bargraphs.at(index);
+            return &this->_bargraphs.at(index);
         } catch (out_of_range exception) {
             cout << exception.what() << endl;
+            cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
-        return missingBarGraph;
+        return &missingBarGraph;
     }
 
     void HUD::drawGauges(Mat img){
@@ -236,9 +254,7 @@
         gettimeofday(&currFrameTime, NULL);
         
         Mat img;
-        img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
         //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
-        int i = 0;
         int j = 1;
         int multiplier = 1;
         int r=0, g=0, b=0;
@@ -261,19 +277,23 @@
                 img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
                 if(img.empty()) break;
                 drawGauges(img);
-                this->_gauges[0].setGaugeValue(i);
-                if(i%1==0){
+                this->_gauges[0].setGaugeValue(j);
+                if(j%1==0){
                     r = (rand() % 256);
                     g = (rand() % 256);
                     b = (rand() % 256);
                 }
                 this->_gauges[0].setTickerColor(r, g, b);
-                i++;
+                this->_gauges[0].setGaugeColor(r, g, b);
+                this->_gauges[0].setEndAngle(j);
                 drawTextLists(img);
                 drawBarGraphs(img);
                 this->_lists[0].setTextColor(r, g, b);
+                this->_lists[0].setBorderColor(r, g, b);
                 this->_bargraphs[0].setInnerRectangleColor(r, g, b);
                 this->_bargraphs[0].setCurrentFill(j);
+                this->_bargraphs[0].setBarGraphSize(50, j);
+                this->_bargraphs[0].setOuterRectangleColor(r, g, b);
                 j += multiplier;
                 if(j>=100 || j <=1) multiplier *= -1;
                 

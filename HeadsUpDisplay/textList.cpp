@@ -76,6 +76,8 @@
 
     void TextList::setX(int x){
         this->_xPos = x;
+        _updateText();
+        _updateBorder();
     }
     int TextList::getY(){
         return this->_yPos;
@@ -83,6 +85,8 @@
 
     void TextList::setY(int y){
         this->_yPos = y;
+        _updateText();
+        _updateBorder();
     }
 
     Scalar TextList::getTextColor(){
@@ -103,6 +107,16 @@
         this->_rBorder = r;
         this->_gBorder = g;
         this->_bBorder = b;
+    }
+
+    int TextList::getTextFontScale(){
+        return this->_tBoxFontScale;
+    }
+
+    void TextList::setTextFontScale(int newScale){
+        this->_tBoxFontScale = newScale;
+        _updateText();
+        _updateBorder();
     }
 
     void TextList::_drawText(Mat img){

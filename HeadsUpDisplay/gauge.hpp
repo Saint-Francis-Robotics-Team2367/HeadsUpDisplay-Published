@@ -25,8 +25,9 @@ class Gauge
     
 public:
     Gauge();
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha, double increment, int startingValue, bool showMin, bool showMax);
-    Gauge(int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b, int alpha);
+    Gauge(int x, int y, int size, int r, int g, int b, double increment, int startingValue, bool showMin, bool showMax);
+    Gauge(int x, int y, int size, int r, int g, int b);
+    Gauge(int x, int y, int size, int r, int g, int b, int startingValue, double angleIncrement, int endAngle);
     void drawGauge(Mat img);
     int getX();
     int getY();
