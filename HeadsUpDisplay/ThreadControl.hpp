@@ -11,4 +11,13 @@
 
 #include <stdio.h>
 
+class ThreadControl{
+public:
+    int x;
+private:
+    int y;
+    
+};
+
+
 #endif /* ThreadControl_hpp */

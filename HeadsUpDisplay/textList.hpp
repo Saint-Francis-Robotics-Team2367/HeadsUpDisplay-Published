@@ -20,8 +20,7 @@
 using namespace std;
 using namespace cv;
 
-class TextList
-{
+class TextList{
     
 public:
     TextList();

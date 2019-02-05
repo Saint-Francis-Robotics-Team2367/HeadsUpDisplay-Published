@@ -19,8 +19,7 @@
 using namespace std;
 using namespace cv;
 
-class BarGraph
-{
+class BarGraph{
     
 public:
     BarGraph();

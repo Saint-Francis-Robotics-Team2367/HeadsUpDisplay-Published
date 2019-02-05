@@ -20,8 +20,7 @@
 using namespace std;
 using namespace cv;
 
-class Gauge
-{
+class Gauge{
     
 public:
     Gauge();
