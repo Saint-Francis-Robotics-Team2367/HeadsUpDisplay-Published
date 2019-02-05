@@ -31,7 +31,7 @@
     }
 
     //constructor 2
-    TextList::TextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
+    TextList::TextList(int x, int y, double scaleTextSize, int r, int g, int b, int alpha){
         this->_xPos = x;
         this->_yPos = y;
         this->_scaleTextSize = scaleTextSize;
@@ -120,9 +120,9 @@
     }
 
     void TextList::_drawText(Mat img){
-        //VideoCapture capture; //camera feed
         
         Mat image_roi; //roi of output image
+        
         int x = getX() + 2;
         int y = getY() + 2;
         
@@ -150,7 +150,7 @@
         Size tBoxBorderSize;
         
         //calc size of image needed to draw text
-        tBoxBorderSize = getTextSize(this->_text,this->_tBoxFont,this->_tBoxFontScale, this->_thickness, &this->_tBoxBaseline);
+        tBoxBorderSize = getTextSize(this->_text,this->_tBoxFont,this->_scaleTextSize, this->_thickness, &this->_tBoxBaseline);
         
         //allocate images based on text settings
         
@@ -161,11 +161,10 @@
 
     void TextList::_drawLocalText(){
         //draw text onto alpha layer
-        putText(this->_textAlpha, this->_text, Point(0,this->_textAlpha.size().height-this->_tBoxBaseline), this->_tBoxFont, this->_tBoxFontScale, Scalar(255), this->_thickness);
+        putText(this->_textAlpha, this->_text, Point(0,this->_textAlpha.size().height-this->_tBoxBaseline), this->_tBoxFont, this->_scaleTextSize, Scalar(255), this->_thickness);
     }
 
     void TextList::_drawBorder(Mat img){
-        int shift = 0;
         
         Mat image_roi; //roi of output image
         

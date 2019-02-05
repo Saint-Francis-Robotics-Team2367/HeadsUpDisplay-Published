@@ -35,8 +35,8 @@ public:
     void addGauge(int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle);
     void addGauge(int index);
     void addGauge();
-    void addTextList(int x, int y, int scaleTextSize,  int r, int g, int b, int alpha, int index);
-    void addTextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha);
+    void addTextList(int x, int y, double scaleTextSize,  int r, int g, int b, int alpha, int index);
+    void addTextList(int x, int y, double scaleTextSize, int r, int g, int b, int alpha);
     void addTextList(int index);
     void addTextList();
     void addBarGraph(int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha, int index);

@@ -68,7 +68,7 @@
         Gauge gauge;
         this->_gauges.push_back(gauge);
     }
-    void HUD::addTextList(int x, int y, int scaleTextSize,  int r, int g, int b, int alpha, int index){
+    void HUD::addTextList(int x, int y, double scaleTextSize,  int r, int g, int b, int alpha, int index){
         TextList list(x, y, scaleTextSize, r, g, b, alpha);
         try{
             this->_lists.insert(this->_lists.begin()+index, list);
@@ -77,7 +77,7 @@
             cout << "[Error] Desired index is out of bounds of vector" << endl;
         }
     }
-    void HUD::addTextList(int x, int y, int scaleTextSize, int r, int g, int b, int alpha){
+    void HUD::addTextList(int x, int y, double scaleTextSize, int r, int g, int b, int alpha){
         TextList list(x, y, scaleTextSize, r, g, b, alpha);
         this->_lists.push_back(list);
     }
@@ -257,6 +257,8 @@
         //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
         int j = 1;
         int multiplier = 1;
+        int multiplier2 = 1;
+        int i = 1;
         int r=0, g=0, b=0;
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
@@ -283,19 +285,22 @@
                     g = (rand() % 256);
                     b = (rand() % 256);
                 }
-                this->_gauges[0].setTickerColor(r, g, b);
-                this->_gauges[0].setGaugeColor(r, g, b);
+                //this->_gauges[0].setTickerColor(r, g, b);
+                //this->_gauges[0].setGaugeColor(r, g, b);
                 this->_gauges[0].setEndAngle(j);
                 drawTextLists(img);
                 drawBarGraphs(img);
-                this->_lists[0].setTextColor(r, g, b);
-                this->_lists[0].setBorderColor(r, g, b);
-                this->_bargraphs[0].setInnerRectangleColor(r, g, b);
+                //this->_lists[0].setTextColor(r, g, b);
+                //this->_lists[0].setBorderColor(r, g, b);
+                //this->_lists[0].setTextFontScale(i);
+                //this->_bargraphs[0].setInnerRectangleColor(r, g, b);
                 this->_bargraphs[0].setCurrentFill(j);
                 this->_bargraphs[0].setBarGraphSize(50, j);
-                this->_bargraphs[0].setOuterRectangleColor(r, g, b);
+                //this->_bargraphs[0].setOuterRectangleColor(r, g, b);
                 j += multiplier;
+                i += multiplier2;
                 if(j>=100 || j <=1) multiplier *= -1;
+                if(i>=12 || i<=1) multiplier2 *= -1;
                 
                 //log the cpu clock after allocations, update functions, and draw functions
                 currTime = clock();
