@@ -245,6 +245,16 @@
         for(int i=0; i<this->_lists.size(); i++) this->_lists[i].drawTextList(img);
     }
 
+    void HUD::getMat()
+    {
+        while(true)
+        {
+            _mutex.lock();
+            _img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
+            _mutex.unlock();
+        }
+    }
+
     void HUD::drawAll(){
         String text = "Test";
         
@@ -253,7 +263,8 @@
         struct timeval currFrameTime,lastFrameTime;
         gettimeofday(&currFrameTime, NULL);
         
-        Mat img;
+        _getter = thread(&HUD::getMat, this);
+        
         //this->_capture.open(0); //VideoCapture code is commented out till Apple comes with fix of allowing access to the camera through xcode...
         int j = 1;
         int multiplier = 1;
@@ -263,6 +274,7 @@
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
+                _mutex.lock();
                 gettimeofday(&currFrameTime, NULL);
                 long int ms = (currFrameTime.tv_sec * 1000 + currFrameTime.tv_usec / 1000) - (lastFrameTime.tv_sec * 1000 + lastFrameTime.tv_usec / 1000);
                 text = "Proc time: " + to_string((float)(currTime - startTime) / CLOCKS_PER_SEC) + " FPS: " + to_string((float)(1000.0 / ms));
@@ -272,13 +284,13 @@
                 //I need to make a class that can read image files and update the HUD whenever it gets the chance
                 //The class needs to have a very specific thread that it uses when it is connected to the server, and by the fact that it has that very specific string as it's tag so to speak it will, it will receive the raw image
                 //It is going to be a completely different project
+                //_img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
                 
                 //log the cpu clock to see how long the alloc and draw takes
                 startTime = clock();
                 //this->_capture >> img;
-                img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
-                if(img.empty()) break;
-                drawGauges(img);
+                if(_img.empty()) break;
+                drawGauges(this->_img);
                 this->_gauges[0].setGaugeValue(j);
                 if(j%1==0){
                     r = (rand() % 256);
@@ -288,8 +300,8 @@
                 //this->_gauges[0].setTickerColor(r, g, b);
                 //this->_gauges[0].setGaugeColor(r, g, b);
                 this->_gauges[0].setEndAngle(j);
-                drawTextLists(img);
-                drawBarGraphs(img);
+                drawTextLists(this->_img);
+                drawBarGraphs(this->_img);
                 //this->_lists[0].setTextColor(r, g, b);
                 //this->_lists[0].setBorderColor(r, g, b);
                 //this->_lists[0].setTextFontScale(i);
@@ -305,7 +317,8 @@
                 //log the cpu clock after allocations, update functions, and draw functions
                 currTime = clock();
                 
-                imshow("Heads Up Display", img);
+                imshow("Heads Up Display", this->_img);
+                _mutex.unlock();
             }
         }
     }

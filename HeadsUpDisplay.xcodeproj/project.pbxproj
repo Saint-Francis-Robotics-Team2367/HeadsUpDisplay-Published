@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A7245D5220A57D4009C9F8F /* ThreadControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7245D3220A57D4009C9F8F /* ThreadControl.cpp */; };
 		7AEC42A221AA2A160031F4A2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AEC42A121AA2A160031F4A2 /* main.cpp */; };
 		7AEC42AA21AA2A720031F4A2 /* HUD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AEC42A821AA2A720031F4A2 /* HUD.cpp */; };
 		7AEC42AD21AA2A8D0031F4A2 /* gauge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AEC42AB21AA2A8D0031F4A2 /* gauge.cpp */; };
@@ -70,8 +69,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7A7245D3220A57D4009C9F8F /* ThreadControl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadControl.cpp; sourceTree = "<group>"; };
-		7A7245D4220A57D4009C9F8F /* ThreadControl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ThreadControl.hpp; sourceTree = "<group>"; };
 		7AEC429E21AA2A160031F4A2 /* HeadsUpDisplay */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HeadsUpDisplay; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AEC42A121AA2A160031F4A2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7AEC42A821AA2A720031F4A2 /* HUD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HUD.cpp; sourceTree = "<group>"; };
@@ -249,8 +246,6 @@
 				7AEC42AF21AA2AB20031F4A2 /* barGraph.hpp */,
 				7AEC42B121AA2AC40031F4A2 /* textList.cpp */,
 				7AEC42B221AA2AC40031F4A2 /* textList.hpp */,
-				7A7245D3220A57D4009C9F8F /* ThreadControl.cpp */,
-				7A7245D4220A57D4009C9F8F /* ThreadControl.hpp */,
 			);
 			path = HeadsUpDisplay;
 			sourceTree = "<group>";
@@ -314,7 +309,6 @@
 				7AEC42B021AA2AB20031F4A2 /* barGraph.cpp in Sources */,
 				7AEC42A221AA2A160031F4A2 /* main.cpp in Sources */,
 				7AEC42AD21AA2A8D0031F4A2 /* gauge.cpp in Sources */,
-				7A7245D5220A57D4009C9F8F /* ThreadControl.cpp in Sources */,
 				7AEC42AA21AA2A720031F4A2 /* HUD.cpp in Sources */,
 				7AEC42B321AA2AC40031F4A2 /* textList.cpp in Sources */,
 			);

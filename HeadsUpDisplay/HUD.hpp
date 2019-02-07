@@ -12,6 +12,7 @@
 #include "barGraph.hpp"
 #include "gauge.hpp"
 #include "textList.hpp"
+#include <thread>
 #include <iostream>
 #include <string>
 #include <sys/time.h>
@@ -61,6 +62,7 @@ public:
     void drawGauges(Mat img);
     void drawBarGraphs(Mat img);
     void drawTextLists(Mat img);
+    void getMat();
     void drawAll();
     static const Gauge *MISSING_GAUGE;
     
@@ -69,7 +71,9 @@ private:
     vector<Gauge> _gauges;
     vector<TextList> _lists;
     VideoCapture _capture;
-    
+    thread _getter;
+    mutex _mutex;
+    Mat _img;
 };
 
 #endif /* HUD.hpp */
