@@ -15,7 +15,7 @@ int main(int argc, const char * argv[]){
     
     HUD *hud = new HUD();
     
-    //all these update functions will only need to be called in a different thread based on when it is fed data from other code
+    //all these update functions will only need to be called in a different thread based on when it is fed data from other programs running on the robot
     hud->addTextList(50, 50, 0.5, 55, 50, 250, 255);//int x, int y, int scaleTextSize, int r, int g, int b, int alpha
     //hud->addGauge(300, 200, 0, 100, 100, 50, 200, 244, 255);//int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b
     hud->addGauge(300, 200, 100, 50, 200, 244, 0, 320, 90);//int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle
