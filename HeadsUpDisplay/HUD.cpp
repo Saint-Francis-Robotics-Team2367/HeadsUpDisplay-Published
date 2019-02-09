@@ -233,16 +233,41 @@
         return &missingBarGraph;
     }
 
-    void HUD::drawGauges(Mat img){
-        for(int i=0; i<this->_gauges.size(); i++) this->_gauges[i].drawGauge(img);
+    void HUD::drawGauges(){//parallelism threading
+        vector<thread> threads;
+        for(int i=0; i<this->_gauges.size(); i++){
+            threads.push_back(thread(&Gauge::drawGauge,_gauges[i], _img));
+            //this->_gauges[i].drawGauge(img);
+        }
+        
+        for(int i=0; i<threads.size(); i++){
+            threads[i].join();
+        }
     }
 
-    void HUD::drawBarGraphs(Mat img){
-        for(int i=0; i<this->_bargraphs.size(); i++) this->_bargraphs[i].drawBarGraph(img);
+    void HUD::drawBarGraphs(){//parallelism threading
+        vector<thread> threads;
+        for(int i=0; i<this->_bargraphs.size(); i++){
+            //thread(&ObjectThatHasTheFunction::functionname, instance of the object, any parameters...);
+            threads.push_back(thread(&BarGraph::drawBarGraph,_bargraphs[i], _img));
+            //this->_bargraphs[i].drawBarGraph(img);
+        }
+        
+        for(int i=0; i<threads.size(); i++){
+            threads[i].join();
+        }
     }
 
-    void HUD::drawTextLists(Mat img){
-        for(int i=0; i<this->_lists.size(); i++) this->_lists[i].drawTextList(img);
+    void HUD::drawTextLists(){//parallelism threading
+        vector<thread> threads;
+        for(int i=0; i<this->_lists.size(); i++){
+            threads.push_back(thread(&TextList::drawTextList,_lists[i], _img));
+            //this->_lists[i].drawTextList(img);
+        }
+        
+        for(int i=0; i<threads.size(); i++){
+            threads[i].join();
+        }
     }
 
     void HUD::getMat()
@@ -283,14 +308,13 @@
                 
                 //I need to make a class that can read image files and update the HUD whenever it gets the chance
                 //The class needs to have a very specific thread that it uses when it is connected to the server, and by the fact that it has that very specific string as it's tag so to speak it will, it will receive the raw image
-                //It is going to be a completely different project
                 //_img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
                 
                 //log the cpu clock to see how long the alloc and draw takes
                 startTime = clock();
                 //this->_capture >> img;
                 if(_img.empty()) break;
-                drawGauges(this->_img);
+                drawGauges();
                 this->_gauges[0].setGaugeValue(j);
                 if(j%1==0){
                     r = (rand() % 256);
@@ -300,8 +324,8 @@
                 //this->_gauges[0].setTickerColor(r, g, b);
                 //this->_gauges[0].setGaugeColor(r, g, b);
                 this->_gauges[0].setEndAngle(j);
-                drawTextLists(this->_img);
-                drawBarGraphs(this->_img);
+                drawTextLists();
+                drawBarGraphs();
                 //this->_lists[0].setTextColor(r, g, b);
                 //this->_lists[0].setBorderColor(r, g, b);
                 //this->_lists[0].setTextFontScale(i);

@@ -1,2 +1,3 @@
 #Ignore the Build Folder
 build/**
+HeadsUpDisplay.xcodeproj/**

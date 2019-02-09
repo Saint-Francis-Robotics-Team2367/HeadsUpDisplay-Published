@@ -59,9 +59,9 @@ public:
     Gauge* atGauge(int index);
     TextList* atTextList(int index);
     BarGraph* atBarGraph(int index);
-    void drawGauges(Mat img);
-    void drawBarGraphs(Mat img);
-    void drawTextLists(Mat img);
+    void drawGauges();
+    void drawBarGraphs();
+    void drawTextLists();
     void getMat();
     void drawAll();
     static const Gauge *MISSING_GAUGE;
@@ -72,6 +72,7 @@ private:
     vector<TextList> _lists;
     VideoCapture _capture;
     thread _getter;
+    thread _textListDrawer;
     mutex _mutex;
     Mat _img;
 };
