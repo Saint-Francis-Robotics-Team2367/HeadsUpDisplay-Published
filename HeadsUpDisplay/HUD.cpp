@@ -233,11 +233,11 @@
         return &missingBarGraph;
     }
 
+    //thread(&ObjectThatHasTheFunction::functionname, instance of the object, any parameters...);
     void HUD::drawGauges(){//parallelism threading
         vector<thread> threads;
         for(int i=0; i<this->_gauges.size(); i++){
             threads.push_back(thread(&Gauge::drawGauge,_gauges[i], _img));
-            //this->_gauges[i].drawGauge(img);
         }
         
         for(int i=0; i<threads.size(); i++){
@@ -248,9 +248,7 @@
     void HUD::drawBarGraphs(){//parallelism threading
         vector<thread> threads;
         for(int i=0; i<this->_bargraphs.size(); i++){
-            //thread(&ObjectThatHasTheFunction::functionname, instance of the object, any parameters...);
             threads.push_back(thread(&BarGraph::drawBarGraph,_bargraphs[i], _img));
-            //this->_bargraphs[i].drawBarGraph(img);
         }
         
         for(int i=0; i<threads.size(); i++){
@@ -262,7 +260,6 @@
         vector<thread> threads;
         for(int i=0; i<this->_lists.size(); i++){
             threads.push_back(thread(&TextList::drawTextList,_lists[i], _img));
-            //this->_lists[i].drawTextList(img);
         }
         
         for(int i=0; i<threads.size(); i++){

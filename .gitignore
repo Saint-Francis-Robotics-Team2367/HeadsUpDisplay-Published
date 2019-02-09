@@ -1,3 +1,6 @@
 #Ignore the Build Folder
 build/**
-HeadsUpDisplay.xcodeproj/**
+
+#Ignore the Xcode Project File
+*.xcodeproj/
+DerivedData/
