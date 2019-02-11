@@ -12,9 +12,9 @@ It is currently going to be tested with a live videostream through the use of th
 `https://docs.google.com/document/d/1sqLKF9MTwBlhPmWDXRrIBfmYMgjToeO5ulkTKaWTRcM`
 
 **Installation Script for Mac OS:**
-`curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/master/installHUD.sh?token=AOStZK_evU3RnuGhMNVqUEzuWYwmqqpdks5cXLwrwA%3D%3D | bash`
+`curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/ThreadedHUD/installHUD.sh?token=AOStZLcNrxNEvbnuPu6HfTVxMkoWXGwIks5cahHtwA%3D%3D | bash`
 
 **Installation Script for Linux OS**
-`curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/master/installHUD.sh?token=AOStZK_evU3RnuGhMNVqUEzuWYwmqqpdks5cXLwrwA%3D%3D | bash`
+`curl -s https://raw.githubusercontent.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/ThreadedHUD/installHUD.sh?token=AOStZLcNrxNEvbnuPu6HfTVxMkoWXGwIks5cahHtwA%3D%3D | bash`
 
 *Disclaimer: The linux script has not be implemented correctly yet*
