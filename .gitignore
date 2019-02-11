@@ -1,0 +1,6 @@
+#Ignore the Build Folder
+build/**
+
+#Ignore the Xcode Project File
+*.xcodeproj/
+DerivedData/
