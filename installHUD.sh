@@ -6,6 +6,6 @@ echo Beginning Installation...
 brew tap homebrew/science
 brew install opencv3
 
-git clone https://github.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published/tree/ThreadedHUD
+git clone -b ThreadedHUD https://github.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published.git
 
 echo Installation Complete \o/
