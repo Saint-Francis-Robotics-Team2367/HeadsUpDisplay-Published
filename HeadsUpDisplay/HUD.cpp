@@ -277,7 +277,7 @@
                 startTime = clock();
                 //this->_capture >> img;
                 img = imread("/Users/jeevanprakash/Documents/FRCCode/HeadsUpDisplay-Published/HeadsUpDisplay/nicebg.png");
-                if(img.empty()) break;
+                if(img.empty()) break;//test
                 drawGauges(img);
                 this->_gauges[0].setGaugeValue(j);
                 if(j%1==0){
@@ -285,18 +285,18 @@
                     g = (rand() % 256);
                     b = (rand() % 256);
                 }
-                //this->_gauges[0].setTickerColor(r, g, b);
-                //this->_gauges[0].setGaugeColor(r, g, b);
+                this->_gauges[0].setTickerColor(r, g, b);
+                this->_gauges[0].setGaugeColor(r, g, b);
                 this->_gauges[0].setEndAngle(j);
                 drawTextLists(img);
                 drawBarGraphs(img);
-                //this->_lists[0].setTextColor(r, g, b);
-                //this->_lists[0].setBorderColor(r, g, b);
+                this->_lists[0].setTextColor(r, g, b);
+                this->_lists[0].setBorderColor(r, g, b);
                 //this->_lists[0].setTextFontScale(i);
-                //this->_bargraphs[0].setInnerRectangleColor(r, g, b);
+                this->_bargraphs[0].setInnerRectangleColor(r, g, b);
                 this->_bargraphs[0].setCurrentFill(j);
                 this->_bargraphs[0].setBarGraphSize(50, j);
-                //this->_bargraphs[0].setOuterRectangleColor(r, g, b);
+                this->_bargraphs[0].setOuterRectangleColor(r, g, b);
                 j += multiplier;
                 i += multiplier2;
                 if(j>=100 || j <=1) multiplier *= -1;
