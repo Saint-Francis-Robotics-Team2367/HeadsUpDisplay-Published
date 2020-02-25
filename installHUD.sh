@@ -6,6 +6,6 @@ echo Beginning Installation...
 brew tap homebrew/science
 brew install opencv3
 
-git clone https://github.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published.git
+git clone --single-branch --branch ImplementedHUD https://github.com/Saint-Francis-Robotics-Team2367/HeadsUpDisplay-Published.git
 
 echo Installation Complete \o/
