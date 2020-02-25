@@ -19,7 +19,7 @@ int main(int argc, const char * argv[]) {
     //hud->addGauge(300, 200, 0, 100, 100, 50, 200, 244, 255);//int x, int y, int lowerRange, int upperRange, int size, int r, int g, int b
     hud->addGauge(200, 200, 100, 50, 200, 244, 0, 320, 90);//int x, int y, int size, int r, int g, int b,  int startingValue, double angleIncrement, int endAngle
     hud->atGauge(0)->setGaugeValue(100);
-    hud->addBarGraph(100, 100, 1, 20, 100, 0, 250, 200, 255);//int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha
+    hud->addBarGraph(200, 350, 1, 20, 100, 0, 250, 200, 255);//int x, int y, int scaleValues, int width, int height, int r, int g, int b, int alpha
     hud->drawAll();
     
     return 0;

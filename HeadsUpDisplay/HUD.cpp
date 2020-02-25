@@ -259,7 +259,7 @@
         int multiplier = 1;
         int multiplier2 = 1;
         int i = 1;
-        int r=0, g=0, b=0;
+        int r=2, g=184, b=184;
         if(true){//this->_capture.isOpened()
             cout << "Capture is opened" << endl;
             while(waitKey(10) != 'q'){
@@ -280,11 +280,11 @@
                 if(img.empty()) break;//test
                 drawGauges(img);
                 this->_gauges[0].setGaugeValue(j);
-                if(j%1==0){
+                /*if(j%1==0){
                     r = (rand() % 256);
                     g = (rand() % 256);
                     b = (rand() % 256);
-                }
+                }*/
                 this->_gauges[0].setTickerColor(r, g, b);
                 this->_gauges[0].setGaugeColor(r, g, b);
                 this->_gauges[0].setEndAngle(j);
